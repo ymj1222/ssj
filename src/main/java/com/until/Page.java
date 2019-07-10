@@ -1,4 +1,4 @@
-package com.example.demo.until;
+package com.until;
 
 import java.util.ArrayList;
 import java.util.List;

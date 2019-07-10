@@ -1,4 +1,4 @@
-package com.example.demo.until;
+package com.until;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

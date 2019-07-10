@@ -1,4 +1,4 @@
-package com.example.demo.until;
+package com.until;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

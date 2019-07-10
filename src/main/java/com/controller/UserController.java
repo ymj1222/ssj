@@ -1,11 +1,11 @@
-package com.example.demo.controller;
+package com.controller;
 
 
-import com.example.demo.entity.Pageh;
-import com.example.demo.entity.User;
-import com.example.demo.service.UserService;
-import com.example.demo.until.JsonUtils;
-import com.example.demo.until.Page;
+import com.entity.Pageh;
+import com.entity.User;
+import com.service.UserService;
+import com.until.JsonUtils;
+import com.until.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

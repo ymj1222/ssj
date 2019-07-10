@@ -1,12 +1,10 @@
-package com.example.demo.service;
+package com.service;
 
-import com.example.demo.dao.UserDao;
-import com.example.demo.entity.User;
+import com.dao.UserDao;
+import com.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 

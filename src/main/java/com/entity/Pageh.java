@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.example.demo.until;
+package com.entity;
 
 /**
  * @author Administrator
