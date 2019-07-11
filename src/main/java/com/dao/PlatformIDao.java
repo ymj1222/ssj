@@ -20,8 +20,18 @@ public class PlatformIDao {
 	}
 	@Transactional
 	public void update(PlatformI p) {
-		String jpql=" update PlatformI set logo=?1,companyWebsite=?2,tel=?3,qr=?4 where code=?5";
-		Query query=entityManager.createQuery(jpql);
-		query.setParameter(1, p.getLogo()).setParameter(2, p.getCompanyWebsite()).setParameter(3,p.getTel()).setParameter(4, p.getQr()).setParameter(5, p.getCode()).executeUpdate();
+		if(null!=p.getLogo()&&null==p.getQr()){
+			String jpql=" update PlatformI set logo=?1,companyWebsite=?2,tel=?3 where code=?4";
+			Query query=entityManager.createQuery(jpql);
+			query.setParameter(1, p.getLogo()).setParameter(2, p.getCompanyWebsite()).setParameter(3,p.getTel()).setParameter(4, p.getCode()).executeUpdate();
+		}if(null!=p.getQr()&&null==p.getLogo()){
+			String jpql=" update PlatformI set qr=?1,companyWebsite=?2,tel=?3 where code=?4";
+			Query query=entityManager.createQuery(jpql);
+			query.setParameter(1, p.getQr()).setParameter(2, p.getCompanyWebsite()).setParameter(3,p.getTel()).setParameter(4, p.getCode()).executeUpdate();
+		}else if(null!=p.getLogo()&&null!=p.getQr()){
+			String jpql=" update PlatformI set logo=?1,companyWebsite=?2,tel=?3,qr=?4 where code=?5";
+			Query query=entityManager.createQuery(jpql);
+			query.setParameter(1, p.getLogo()).setParameter(2, p.getCompanyWebsite()).setParameter(3,p.getTel()).setParameter(4,p.getQr()).setParameter(5, p.getCode()).executeUpdate();
+		}
 	}
 }
