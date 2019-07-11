@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.entity;
+package com.util;
 
 /**
  * @author Administrator

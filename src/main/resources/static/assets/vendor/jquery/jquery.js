@@ -4211,7 +4211,7 @@ function adjustCSS( elem, prop, valueParts, tween ) {
 
 		do {
 
-			// If previous iteration zeroed out, double until we get *something*.
+			// If previous iteration zeroed out, double util we get *something*.
 			// Use string for doubling so we don't accidentally see scale as unchanged below
 			scale = scale || ".5";
 
@@ -5404,7 +5404,7 @@ jQuery.extend( {
 
 jQuery.fn.extend( {
 
-	// Keep domManip exposed until 3.0 (gh-2225)
+	// Keep domManip exposed util 3.0 (gh-2225)
 	domManip: domManip,
 
 	detach: function( selector ) {

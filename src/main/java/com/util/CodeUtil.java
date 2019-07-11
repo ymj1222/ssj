@@ -1,4 +1,4 @@
-package com.until;
+package com.util;
 
 public class CodeUtil {
 public  synchronized String getCode() {

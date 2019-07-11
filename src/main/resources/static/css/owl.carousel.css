@@ -147,7 +147,7 @@
 	line-height: 0;
 	height: 0;
 }
-/* display none until init */
+/* display none util init */
 .owl-carousel{
 	display: none;
 	position: relative;
