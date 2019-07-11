@@ -18,7 +18,7 @@ public class InformationPush {
 	/**
 	 * 主键
 	 */
-	private Integer id;
+	private Integer  id;
 	/**
 	 * 联系方式
 	 */
