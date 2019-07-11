@@ -27,11 +27,11 @@ public class ProductEvaluationDao {
 	public List<ProductEvaluation> select(Long code, int pageNow, int pageSize) {
 		String sql = "select e from ProductEvaluation e where 1=1";
 		if (code != null && code != 0) {
-			sql += " and productCode= :code";
+			sql += " and productCode= ?1";
 		}
 		Query query = entityManager.createQuery(sql);
 		if (code != null && code != 0) {
-			query.setParameter("code", code);
+			query.setParameter(1, code);
 		}
 		List<ProductEvaluation> result = query.getResultList();
 		return result;
@@ -40,11 +40,11 @@ public class ProductEvaluationDao {
 	public Long page(Long code) {
 		String sql = "select count(e) from ProductEvaluation e where 1=1";
 		if (code != null && code != 0) {
-			sql += " and productCode= :code";
+			sql += " and productCode= ?1";
 		}
 		Query query = entityManager.createQuery(sql);
 		if (code != null && code != 0) {
-			query.setParameter("code", code);
+			query.setParameter(1, code);
 		}
 		return (Long)query.getSingleResult();
 	}

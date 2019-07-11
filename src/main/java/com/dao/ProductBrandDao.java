@@ -32,11 +32,11 @@ public class ProductBrandDao {
 	 */
 	public void delete(long code) {
 		Query querys = entityManager
-				.createNativeQuery("update Product set brandCode=null,brand_id=null where brandCode= :code");
-		querys.setParameter("code", code);
+				.createNativeQuery("update Products set brand_Code=null,brand_id=null where brand_Code= ?1");
+		querys.setParameter(1, code);
 		querys.executeUpdate();
-		Query query = entityManager.createNativeQuery("delete from ProductBrand where code= :code");
-		query.setParameter("code", code);
+		Query query = entityManager.createNativeQuery("delete from ProductBrand where code= ?2");
+		query.setParameter(2, code);
 		query.executeUpdate();
 	}
 
@@ -54,7 +54,7 @@ public class ProductBrandDao {
 	public List<ProductBrand> select(String name, int pageNow, int pageSize) {
 		String sql = "select b from ProductBrand b where 1=1 ";
 		if (name != null && name != "") {
-			sql += " and b.name like '%'||?||'%'";
+			sql += " and b.name like '%'||?1||'%'";
 		}
 		sql+="order by b.id desc";
 		Query query = entityManager.createQuery(sql);
@@ -70,7 +70,7 @@ public class ProductBrandDao {
 	public Long total(String name) {
 		String sql = "select count(b) from ProductBrand b where 1=1 ";
 		if (name != null && name != "") {
-			sql += " and b.name like '%'||?||'%'";
+			sql += " and b.name like '%'||?1||'%'";
 		}
 		Query query = entityManager.createQuery(sql);
 		if (name != null && name != "") {
@@ -80,8 +80,8 @@ public class ProductBrandDao {
 	}
 
 	public ProductBrand select(long code) {
-		Query query = entityManager.createQuery("select b from ProductBrand b where code= :code");
-		query.setParameter("code", code);
+		Query query = entityManager.createQuery("select b from ProductBrand b where code= ?1");
+		query.setParameter(1, code);
 		return (ProductBrand) query.getSingleResult();
 	}
 	public ProductBrand findbyid(int id) {

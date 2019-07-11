@@ -31,11 +31,11 @@ public class ProductTypeDao {
 	 */
 	public void delete(long code) {
 		Query querys = entityManager
-				.createNativeQuery("update Product set type=null,producttype_id=null where type= :code");
-		querys.setParameter("code", code);
+				.createNativeQuery("update Products set type=null,producttype_id=null where type= ?1");
+		querys.setParameter(1, code);
 		querys.executeUpdate();
-		Query query = entityManager.createNativeQuery("delete from ProductType where code= :code");
-		query.setParameter("code", code);
+		Query query = entityManager.createNativeQuery("delete from Producttype where code= ?1");
+		query.setParameter(1, code);
 		query.executeUpdate();
 	}
 
@@ -52,7 +52,7 @@ public class ProductTypeDao {
 	public List<ProductType> select(String name, int pageNow, int pageSize) {
 		String sql = "select t from ProductType t ";
 		if (name != null && name != "") {
-			sql += " where p.name like '%'||?||'%'";
+			sql += " where t.name like '%'||?1||'%'";
 		}
 		sql += "order by t.id desc";
 		Query query = entityManager.createQuery(sql);
@@ -68,7 +68,7 @@ public class ProductTypeDao {
 	public Long gettotal(String name) {
 		String sql = "select count(t) from ProductType t ";
 		if (name != null && name != "") {
-			sql += " where p.name like '%'||?||'%'";
+			sql += " where t.name like '%'||?1||'%'";
 		}
 		Query query = entityManager.createQuery(sql);
 		if (name != null && name != "") {

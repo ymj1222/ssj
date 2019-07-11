@@ -5,14 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Cacheable(true)
 @Entity
+@Table(name="productband")
 public class ProductBrand implements Serializable {
 
 	/**
@@ -42,9 +36,12 @@ public class ProductBrand implements Serializable {
 	private Integer id; // 主鍵
 	private Long code;// 編號
 	private String name;// 類型
+	@Column(name="createTime")
 	private Date createTime;// 創立日期
 	private String creator;// 創建人
+	@Column(name="lastUpdateTime")
 	private Date lastUpdateTime;// 最後修改時間
+	@Column(name="lastUpdater")
 	private String lastUpdater;// 最後修改人
 	@JsonIgnore
 	@OneToMany(mappedBy = "brand")

@@ -6,31 +6,31 @@ package com.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * @author Administrator
- * @date 2019Äê3ÔÂ28ÈÕ TODO ¸±®aÆ·
+ * @date 2019ï¿½ï¿½3ï¿½ï¿½28ï¿½ï¿½ TODO ï¿½ï¿½ï¿½aÆ·
  */
 @Cacheable(true)
 @Entity
+@Table(name="productevaluation")
 public class ProductEvaluation implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	@Column(name="productCode")
 	private Long productCode;
 	private Byte type;
 	private String context;
-	private Date createTime;// „“Á¢ÈÕÆÚ
-	private String creator;// „“½¨ÈË
-	private Date lastUpdateTime;// ×îááÐÞ¸Ä•rég
-	private String lastUpdater;// ×îááÐÞ¸ÄÈË
+	@Column(name="createTime")
+	private Date createTime;// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	private String creator;// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	@Column(name="lastUpdateTime")
+	private Date lastUpdateTime;// ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸Ä•rï¿½g
+	@Column(name="lastUpdater")
+	private String lastUpdater;// ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½
 	@ManyToOne
 	private Product product;
 
