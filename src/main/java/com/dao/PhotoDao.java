@@ -75,7 +75,7 @@ public class PhotoDao {
 	 */
 	@Transactional
 	public void update(Photo photo) {
-		String jpql = "UPDATE Photo p SET p.name=? WHERE p.code=?";
+		String jpql = "UPDATE Photo p SET p.name= ?1 WHERE p.code= ?2";
 		Query query = entityManager.createQuery(jpql);
 		query.setParameter(1, photo.getName());
 		query.setParameter(2, photo.getCode());
@@ -89,8 +89,7 @@ public class PhotoDao {
 	 */
 	public Photo upquery(String code) {
 		// 1、创建jpql语句(SELECT i 可以省去)
-		String jpql = "SELECT p FROM Photo p WHERE p.code=?";
-		System.out.println(jpql);
+		String jpql = "SELECT p FROM Photo p WHERE p.code= ?1";
 		// 2、创建查询对象
 		Query query = entityManager.createQuery(jpql);
 		// 3、设置查询参数，位置从1开始
@@ -100,11 +99,11 @@ public class PhotoDao {
 	}
 	/**
 	 * 根据CODE删除照片库数据
-	 * @param photo
+	 * @param code
 	 */
 	@Transactional
 	public void delete(String code) {
-		String jpql = "delete from Photo p WHERE p.code=?";
+		String jpql = "delete from Photo p WHERE p.code= ?1";
 		Query query = entityManager.createQuery(jpql);
 		query.setParameter(1,code);
 		query.executeUpdate();
@@ -124,7 +123,7 @@ public class PhotoDao {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Photo> getProduct(String url) {
-		String jpql = "SELECT p FROM Photo p WHERE p.url=?";
+		String jpql = "SELECT p FROM Photo p WHERE p.url= ?1";
 		Query query = entityManager.createQuery(jpql);
 		query.setParameter(1, url);
 		List<Photo> item = query.getResultList();
@@ -137,7 +136,7 @@ public class PhotoDao {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Photo> getphotoUrl(String productCode) {
-		String jpql = "SELECT p FROM Photo p WHERE p.productCode=?";
+		String jpql = "SELECT p FROM Photo p WHERE p.productCode= ?1";
 		Query query = entityManager.createQuery(jpql);
 		query.setParameter(1,productCode);
 		List<Photo> list = query.getResultList();

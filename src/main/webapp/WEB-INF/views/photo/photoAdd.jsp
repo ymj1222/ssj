@@ -24,7 +24,7 @@
 							<div class="col-md-12">
 								<div class="panel">
 									<div class="panel-body">
-										file:<input type="file" required="required" name="file" /><br />
+										file:<input type="file" required="required" name="file" accept="image/*"/><br />
 									</div>
 									<div class="panel-body">
 										输入图片分类相册名<input type="text" maxlength="10" required="required" name="name"  placeholder="类别">

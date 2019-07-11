@@ -71,7 +71,7 @@ public class AdvertisementClickDao {
 	 */
 	@Transactional
 	public void update(AdvertisementClick advertisementClick) {
-		String jpql = "UPDATE AdvertisementClick p SET p.cliclkFrequency=? WHERE p.advertisementCode=?";
+		String jpql = "UPDATE AdvertisementClick p SET p.cliclkFrequency= ?1 WHERE p.advertisementCode= ?2";
 		Query query = entityManager.createQuery(jpql);
 		query.setParameter(1, advertisementClick.getCliclkFrequency());
 		query.setParameter(2, advertisementClick.getAdvertisementCode());
@@ -84,7 +84,7 @@ public class AdvertisementClickDao {
 	 */
 	public AdvertisementClick upquery(String code) {
 			// 1、创建jpql语句(SELECT i 可以省去)
-				String jpql = "SELECT p FROM AdvertisementClick p WHERE p.advertisementCode=?";
+				String jpql = "SELECT p FROM AdvertisementClick p WHERE p.advertisementCode= ?1";
 				// 2、创建查询对象
 				Query query = entityManager.createQuery(jpql);
 				// 3、设置查询参数，位置从1开始

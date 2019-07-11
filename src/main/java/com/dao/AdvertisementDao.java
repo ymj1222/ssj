@@ -63,7 +63,7 @@ public class AdvertisementDao {
 	 */
 	@Transactional
 	public void update(Advertisement advertisement) {
-		String jpql = "UPDATE Advertisement p SET p.photo=?,p.video=? WHERE p.code=?";
+		String jpql = "UPDATE Advertisement p SET p.photo= ?1,p.video= ?2 WHERE p.code= ?3";
 		Query query = entityManager.createQuery(jpql);
 		query.setParameter(1, advertisement.getPhoto());
 		query.setParameter(2, advertisement.getVideo());
@@ -78,7 +78,7 @@ public class AdvertisementDao {
 	 */
 	public Advertisement upquery(String code) {
 		// 1、创建jpql语句(SELECT i 可以省去)
-		String jpql = "SELECT p FROM Advertisement p WHERE p.code=?";
+		String jpql = "SELECT p FROM Advertisement p WHERE p.code= ?1";
 		// 2、创建查询对象
 		Query query = entityManager.createQuery(jpql);
 		// 3、设置查询参数，位置从1开始
@@ -94,7 +94,7 @@ public class AdvertisementDao {
 	 */
 	@Transactional
 	public void delete(String code) {
-		String jpql = "SELECT p FROM Advertisement p WHERE p.code=?";
+		String jpql = "SELECT p FROM Advertisement p WHERE p.code= ?1";
 		Query query = entityManager.createQuery(jpql);
 		query.setParameter(1, code);
 		Advertisement item = (Advertisement) query.getSingleResult();
@@ -115,7 +115,7 @@ public class AdvertisementDao {
 	 */
 	public Advertisement getquery(String photo) {
 		// 1、创建jpql语句(SELECT i 可以省去)
-		String jpql = "SELECT p FROM Advertisement p WHERE p.photo=?";
+		String jpql = "SELECT p FROM Advertisement p WHERE p.photo= ?1";
 		// 2、创建查询对象
 		Query query = entityManager.createQuery(jpql);
 		// 3、设置查询参数，位置从1开始
