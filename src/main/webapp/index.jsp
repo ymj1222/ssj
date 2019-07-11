@@ -11,7 +11,7 @@
 		<!-- 菜单 -->
 		<%@ include file="mune.jsp"%>
 		<div class="main">
-		<embed src="video/196.mp4" width="1920" height="1080"> 
+		<embed src="video/1115.mp4" width="1920" height="1080">
 		</div>
 	</div>
 </body>
