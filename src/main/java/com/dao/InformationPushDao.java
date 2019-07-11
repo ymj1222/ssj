@@ -19,9 +19,8 @@ public class InformationPushDao {
 	private EntityManager entityManager;
 
 	/**
-	 * Ìí¼Ó
-	 * 
-	 * @param agent
+	 * æ·»åŠ 
+	 * @param informationPush
 	 */
 	@Transactional
 	public void add(InformationPush informationPush) {
@@ -29,15 +28,14 @@ public class InformationPushDao {
 	};
 
 	/**
-	 * ´ø·ÖÒ³µÄÄ£ºıËÑË÷
-	 * 
+	 *å¾—åˆ°æ‰€æœ‰æ•°æ®
 	 * @param pageh
 	 * @return
 	 */
 	public List<InformationPush> select(Pageh pageh) {
 		String jpql = "select t from InformationPush t";
 		if (pageh.getPhone() != null && !pageh.getPhone().equals("")) {
-			jpql += " where t.phone like '%'||?||'%/' ";
+			jpql += " where t.phone like '%'||?1||'%' ";
 		}
 		jpql += " order by t.id desc";
 		Query query = entityManager.createQuery(jpql);
@@ -51,18 +49,18 @@ public class InformationPushDao {
 	};
 
 	/**
-	 * µÃµ½Êı¾İÌõÊı
-	 * 
+	 * å¾—åˆ°æ‰€æœ‰æ•°æ®æ¡æ•°
+	 * @param pageh
 	 * @return
 	 */
 	public String gettotal(Pageh pageh) {
 		String jpql = "select count(t) from InformationPush t";
-		if (pageh.getObject1() != null && !pageh.getObject1().equals("")) {
-			jpql += " where t.phone like '%'||?||'%/'";
+		if (pageh.getPhone() != null && !pageh.getPhone().equals("")) {
+			jpql += " where t.phone like '%'||?1||'%'";
 		}
 		Query query = entityManager.createQuery(jpql);
-		if (pageh.getObject1() != null && !pageh.getObject1().equals("")) {
-			query.setParameter(1, pageh.getObject1());
+		if (pageh.getPhone() != null && !pageh.getPhone().equals("")) {
+			query.setParameter(1, pageh.getPhone());
 		}
 		Long count = (Long) query.getResultList().get(0);
 		return count.toString();

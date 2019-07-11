@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.util.SearchTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,8 +57,8 @@ public class ServiceRecordConterllor {
 		Integer pageCount = 0;
 		pageh.setPageNow((Integer.parseInt(pageNow) - 1) * Integer.parseInt(pageSize));
 		pageh.setPageSize(Integer.parseInt(pageSize));
-		shopp.replaceAll("_", "\\\\_");
-		pageh.setObject1(shopp);
+//		shopp.replaceAll("_", "\\\\_");
+		pageh.setObject1(SearchTool.decodeSpecialCharsWhenLikeUseSlash(shopp));
 		pageCount = serviceRecordService.gettotal(pageh);
 		List<ServiceRecord> list = serviceRecordService.select(pageh);
 		response.setCharacterEncoding("utf-8");

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,11 +29,6 @@ import com.service.PhotoService;
 import com.service.ServiceRecordService;
 import com.service.ShoppingGuideService;
 import com.service.UsersService;
-import com.util.DateUtils;
-import com.util.GetNameUtil;
-import com.util.Page;
-import com.util.Pageh;
-import com.util.ProUtil;
 
 @Controller
 public class ShoppingGuideConterllor {
@@ -51,7 +47,7 @@ public class ShoppingGuideConterllor {
 	private UsersService usersService;
 
 	/**
-	 * �ҵ����ҳ��
+	 * ?????????
 	 * 
 	 * @return
 	 */
@@ -61,7 +57,7 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * �ҵ��б�ҳ��
+	 * ?????????
 	 * 
 	 * @return
 	 */
@@ -71,7 +67,7 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * �������
+	 * ???????
 	 * 
 	 * @param shoppingGuide
 	 * @param model
@@ -122,7 +118,7 @@ public class ShoppingGuideConterllor {
 						long bs1 = System.currentTimeMillis();
 						String code1 = Long.toString(bs1);
 						photo.setCode(code1);
-						photo.setName(shoppingGuide.getName() + "��΢��");
+						photo.setName(shoppingGuide.getName() + "?????");
 						photo.setUrl("photo/" + file1.getOriginalFilename());
 						photo.setDate(DateUtils.getCurrentDateString());
 						photo.setCreateTime(DateUtils.getCurrentDateString());
@@ -141,7 +137,7 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ����idɾ������
+	 * ????id???????
 	 * 
 	 * @param id
 	 */
@@ -152,7 +148,7 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * �õ���������
+	 * ???????????
 	 * 
 	 * @param model
 	 * @return
@@ -174,8 +170,8 @@ public class ShoppingGuideConterllor {
 		}
 		pageh.setPageNow((Integer.parseInt(pageNow) - 1) * Integer.parseInt(pageSize));
 		pageh.setPageSize(Integer.parseInt(pageSize));
-		name=name.replaceAll("_", "\\\\_");
-		pageh.setObject1(name);
+//		name=name.replaceAll("_", "\\\\_");
+		pageh.setObject1(SearchTool.decodeSpecialCharsWhenLikeUseSlash(name));
 		int pageCount = 0;
 		pageCount = shoppingGuideService.gettotal(pageh);
 		List<ShoppingGuide> list = shoppingGuideService.select(pageh);
@@ -187,7 +183,7 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * �õ�Ҫ�޸ĵ�����
+	 * ????????????
 	 * 
 	 * @param id
 	 * @param model
@@ -201,7 +197,7 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * �޸�����
+	 * ???????
 	 * 
 	 * @param id
 	 * @param shoppingGuide
@@ -217,7 +213,7 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ���ͷ���ץȥ�����ʱ�򣬽�����״̬�ĳ�æ��
+	 * ??????????????????????????????
 	 * 
 	 * @param id
 	 * @return
@@ -232,7 +228,7 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ���ͷ����ߵ�ʱ�򣬻��߷��������ʱ��״̬��Ϊ����
+	 * ????????????????????????????????????
 	 * 
 	 * @param id
 	 * @return
@@ -248,7 +244,7 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * �ͷ����ߣ���״̬�ĳ�����
+	 * ???????????????????
 	 * 
 	 * @return
 	 */
@@ -258,7 +254,7 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ������֮���������¼���������һ������
+	 * ?????????????????????????????????
 	 * 
 	 * @param serviceRecord
 	 * @return

@@ -51,7 +51,7 @@ public class ShoppingGuideDao {
 	public List<ShoppingGuide> select(Pageh pageh) {
 		String jpql = "select t from ShoppingGuide t";
 		if (pageh.getObject1() != null && !pageh.getObject1().equals("")) {
-			jpql += " where t.name like concat( '%',?,'%') ";
+			jpql += " where t.name like concat( '%',?1,'%') ";
 		}
 		jpql += " order by t.id desc";
 		Query query = entityManager.createQuery(jpql);
@@ -73,7 +73,7 @@ public class ShoppingGuideDao {
 
 		String jpql = "select count(t) from ShoppingGuide t";
 		if (pageh.getObject1() != null && !pageh.getObject1().equals("")) {
-			jpql += " where t.name like concat( '%',?,'%')";
+			jpql += " where t.name like concat( '%',?1,'%')";
 		}
 		Query query = entityManager.createQuery(jpql);
 		if (pageh.getObject1() != null && !pageh.getObject1().equals("")) {

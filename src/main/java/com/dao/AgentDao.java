@@ -23,7 +23,7 @@ public class AgentDao {
 	/**
 	 * Ìí¼Ó
 	 * 
-	 * @param terminal
+	 * @param
 	 */
 	@Transactional
 	public void add(Agent agent, String terminalId) {
@@ -55,7 +55,7 @@ public class AgentDao {
 	public List<Agent> select(Pageh pageh) {
 		String jpql = "select t from Agent t";
 		if (pageh.getObject1() != null && !pageh.getObject1().equals("")) {
-			jpql += " where t.name like '%'||?||'%/'";
+			jpql += " where t.name like '%'||?1||'%'";
 		}
 		jpql += " order by id desc";
 		Query query = entityManager.createQuery(jpql);
@@ -76,7 +76,7 @@ public class AgentDao {
 	public String gettotal(Pageh pageh) {
 		String jpql = "select count(t) from Agent t";
 		if (pageh.getObject1() != null && !pageh.getObject1().equals("")) {
-			jpql += " where t.name like '%'||?||'%/'";
+			jpql += " where t.name like '%'||?1||'%'";
 		}
 		Query query = entityManager.createQuery(jpql);
 		if (pageh.getObject1() != null && !pageh.getObject1().equals("")) {

@@ -48,7 +48,7 @@ public class ServiceRecordDao {
 	public List<ServiceRecord> select(Pageh pageh) {
 		String jpql = "select t from ServiceRecord t where 1 = 1";
 		if (pageh.getObject1() != null && !pageh.getObject1().equals("")) {
-			jpql += " and t.shoppingGuideName like '%'||?||'%/' ";
+			jpql += " and t.shoppingGuideName like '%'||?1||'%' ";
 
 		}
 		jpql += " order by t.id desc";
@@ -71,7 +71,7 @@ public class ServiceRecordDao {
 	public String gettotal(Pageh pageh) {
 		String jpql = "select count(t) from ServiceRecord t where  1 = 1";
 		if (pageh.getObject1() != null && !pageh.getObject1().equals("")) {
-			jpql += " and t.shoppingGuideName like '%'||?||'%/'";
+			jpql += " and t.shoppingGuideName like '%'||?1||'%'";
 		}
 		Query query = entityManager.createQuery(jpql);
 		if (pageh.getObject1() != null && !pageh.getObject1().equals("")) {
