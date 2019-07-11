@@ -30,6 +30,7 @@ public class PayController {
 	@RequestMapping("/payList")
 	public void list(HttpServletResponse response) throws IOException {
 		String parseJSON = JsonUtils.listToJson(p.queryAll());
+		response.setCharacterEncoding("utf-8");
 		response.getWriter().write(parseJSON);
 	}
 	

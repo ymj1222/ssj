@@ -22,14 +22,12 @@ public class PayDao {
 	}
 	@Transactional
 	public void update(String code) {
-		System.out.println(code);
 		String jpql="update Pay set code=?1 where code=?2";
 		Query query=entityManager.createQuery(jpql);
 		query.setParameter(1, code).setParameter(2, "1").executeUpdate();
 	}
 	@Transactional
 	public void update1(String code,String name) {
-		System.out.println(code+"...."+name);
 		String jpql="update Pay set code=?1 where code=?2 and name=?3";
 		Query query=entityManager.createQuery(jpql);
 		query.setParameter(1, "1").setParameter(2, code).setParameter(3, name).executeUpdate();

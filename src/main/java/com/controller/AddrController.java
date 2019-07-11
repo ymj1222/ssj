@@ -17,7 +17,7 @@ import com.service.AddrService;
 public class AddrController {
 	@Autowired
    private AddrService dao;
-    
+
     @RequestMapping("/list")
     public String list(HttpServletRequest request){
         List<Addr> list = dao.queryAll();

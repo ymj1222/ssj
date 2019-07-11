@@ -46,7 +46,7 @@ public class LoginController{
 			Verification user  = userService.valid(account,password);
 			if(user==null||"".equals(user.getAccount())) {
 				request.setAttribute("hiddenCode", "1");
-				request.setAttribute("errorMark", "�˻��������������");
+				request.setAttribute("errorMark", "账号或者密码错误");
 				if("fuck".equals(fuck)) {
 					return "forward:/qLogin.jsp";
 				}else {
@@ -81,7 +81,7 @@ public class LoginController{
 				else
 				{
 					request.setAttribute("hiddenCode", "1");
-					request.setAttribute("errorMark", "�˻��������������");
+					request.setAttribute("errorMark", "账号或者密码错误");
 					if("fuck".equals(fuck)) {
 						return "forward:/qLogin.jsp";
 					}else {
@@ -122,7 +122,7 @@ public class LoginController{
 					else
 					{
 						request.setAttribute("hiddenCode", "1");
-						request.setAttribute("errorMark", "��֤�����");
+						request.setAttribute("errorMark", "验证码错误");
 						if("fuck".equals(fuck)) {
 							return "forward:/qLogin.jsp";
 						}else {
@@ -133,7 +133,7 @@ public class LoginController{
 				else
 							{
 					request.setAttribute("hiddenCode", "1");
-					request.setAttribute("errorMark", "��֤�����");
+					request.setAttribute("errorMark", "验证码错误");
 					if("fuck".equals(fuck)) {
 						return "forward:/qLogin.jsp";
 					}else {

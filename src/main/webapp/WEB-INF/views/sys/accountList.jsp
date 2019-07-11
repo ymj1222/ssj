@@ -41,7 +41,6 @@
 											} else if (obj.isAdmin == "1") {
 												cont = cont + '<td>否</td>';
 											}
-											cont = cont + '<td><input type="hidden" value="'+obj.path+ '"name="URL"><button>下载</button></td>';
 											if (obj.state == "0") {
 												cont = cont + '<td>有效</td>';
 											} else if (obj.state == "1") {
