@@ -17,33 +17,33 @@ public class OrdersService {
 	public void add(Orders orders) {
 		ordersDao.add(orders);
 	}
-public void updateIs(String code,int j,String i) {
-	ordersDao.updateIs(code,j,i);
-}
-
-/**
- * µ½»õÊ±¼ä
- * @param deliveryTime
- */
-public void updateDeliveryTime(String deliveryTime,String logisticsNumber) {
-	ordersDao.updateDeliveryTime(deliveryTime,logisticsNumber);
-}
-/**
- * ·¢»õ
- * @param code
- * @param is
- * @param logisticsNumber
- */
-public void ordersOut(String code,String is,String logisticsNumber) {
-	ordersDao.ordersOut(code, is,logisticsNumber);
-}
-public void ordersCanel(String code,int i) {
-	ordersDao.ordersCanel(code,i);
-}
+	public void updateIs(String code,int j,String i) {
+		ordersDao.updateIs(code,j,i);
+	}
 
 	/**
-	 * µÃµ½ËùÓĞÊı¾İ
-	 * 
+	 * åˆ°è´§æ—¶é—´
+	 * @param deliveryTime
+	 */
+	public void updateDeliveryTime(String deliveryTime,String logisticsNumber) {
+		ordersDao.updateDeliveryTime(deliveryTime,logisticsNumber);
+	}
+	/**
+	 * å‘è´§
+	 * @param code
+	 * @param is
+	 * @param logisticsNumber
+	 */
+	public void ordersOut(String code,String is,String logisticsNumber) {
+		ordersDao.ordersOut(code, is,logisticsNumber);
+	}
+	public void ordersCanel(String code,int i) {
+		ordersDao.ordersCanel(code,i);
+	}
+
+	/**
+	 * å¾—åˆ°æ‰€æœ‰æ•°æ®
+	 *
 	 * @return
 	 */
 	public List<Orders> select(Pageh page) {
@@ -53,8 +53,8 @@ public void ordersCanel(String code,int i) {
 		return list;
 	}
 	/**
-	 * µÃµ½¶©µ¥Î´·¢»õµÄÊı¾İ
-	 * 
+	 * å¾—åˆ°è®¢å•æœªå‘è´§çš„æ•°æ®
+	 *
 	 * @return
 	 */
 	public List<Orders> orderOutSelect(int now,int pageSize,String is) {
@@ -64,7 +64,7 @@ public void ordersCanel(String code,int i) {
 	}
 
 	/**
-	 * µÃµ½Êı¾İ×ÜÒ³Êı
+	 * å¾—åˆ°æ•°æ®æ€»é¡µæ•°
 	 */
 	public Integer gettotal(int pageSize,String sname,String userCode,String isOutOfStock) {
 		int pageCount = 0;
@@ -78,8 +78,8 @@ public void ordersCanel(String code,int i) {
 	}
 
 	/**
-	 * µÃµ½ÒªĞŞ¸ÄµÄÊı¾İ
-	 * 
+	 * å¾—åˆ°è¦ä¿®æ”¹çš„æ•°æ®
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -89,8 +89,8 @@ public void ordersCanel(String code,int i) {
 	}
 
 	/**
-	 * ĞŞ¸ÄÊı¾İ
-	 * 
+	 * ä¿®æ”¹æ•°æ®
+	 *
 	 * @param id
 	 * @param meetroom
 	 */

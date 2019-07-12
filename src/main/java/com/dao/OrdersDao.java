@@ -19,7 +19,7 @@ public class OrdersDao {
 	private EntityManager entityManager;
 
 	/**
-	 * Ìí¼Ó--------------------
+	 * æ·»åŠ --------------------
 	 * 
 	 * @param orders
 	 */
@@ -29,184 +29,184 @@ public class OrdersDao {
 	}
 
 	/**
-	 * ÊÕ»õ ---------------------
+	 * æ”¶è´§ ---------------------
 	 * 
 	 * @param orders
 	 */
 	@Transactional
 	public void updateIs(String code, int o, String i) {
-		String jpql = "update zj_orders set isconfirmreceipt=:is,receivingTime=:re where code=:code";
+		String jpql = "update zj_orders set isconfirmreceipt=?1,receiving_time=?2 where code=?3";
 		Query query = entityManager.createNativeQuery(jpql);
-		query.setParameter("is", o);
-		query.setParameter("re", i);
-		query.setParameter("code", code);
+		query.setParameter(1, o);
+		query.setParameter(2, i);
+		query.setParameter(3, code);
 		query.executeUpdate();
 	}
 /**
- * µ½»õÊ±¼ä ---------------------------
+ * åˆ°è´§æ—¶é—´ ---------------------------
  * @param deliveryTime
  * @param logisticsNumber
  */
 	@Transactional
 	public void updateDeliveryTime(String deliveryTime, String logisticsNumber) {
-		String jpql = "update zj_orders set deliveryTime=:de where logisticsNumber=:l";
+		String jpql = "update zj_orders set delivery_time=?1 where logistics_number=?2";
 		Query query = entityManager.createNativeQuery(jpql);
-		query.setParameter("de", deliveryTime);
-		query.setParameter("l", logisticsNumber);
+		query.setParameter(1, deliveryTime);
+		query.setParameter(2, logisticsNumber);
 		query.executeUpdate();
 	}
 
 	/**
-	 * ·¢»õ ---------------------
+	 * å‘è´§ ---------------------
 	 * 
 	 * @param orders
 	 */
 	@Transactional
 	public void ordersOut(String code, String is, String logisticsNumber) {
-		String jpql = "update zj_orders set isOutOfStock=:is ,logisticsNumber=:l where code =:code";
+		String jpql = "update zj_orders set is_out_of_stock=?1,logistics_number=?2 where code =?3";
 		Query query = entityManager.createNativeQuery(jpql);
-		query.setParameter("is", is);
-		query.setParameter("l", logisticsNumber);
-		query.setParameter("code", code);
+		query.setParameter(1, is);
+		query.setParameter(2, logisticsNumber);
+		query.setParameter(3, code);
 		query.executeUpdate();
 
 	}
 
 	/**
-	 * ¶©µ¥È¡Ïû ---------------------------
+	 * è®¢å•å–æ¶ˆ ---------------------------
 	 * 
 	 * @param code
 	 * @param o
 	 */
 	@Transactional
 	public void ordersCanel(String code, int o) {
-		String jpql = "update zj_orders set orderState=:o where code =:code";
+		String jpql = "update zj_orders set order_state=?1 where code =?2";
 		Query query = entityManager.createNativeQuery(jpql);
-		query.setParameter("o", o);
-		query.setParameter("code", code);
+		query.setParameter(1, o);
+		query.setParameter(2, code);
 		query.executeUpdate();
 	}
 
 	/**
-	 * ¸ù¾İidµÃµ½ordersµÄ¼¯ºÏ
+	 * æ ¹æ®idå¾—åˆ°ordersçš„é›†åˆ
 	 * 
 	 * @param id
 	 * @return
 	 */
 	public List<Orders> select( Pageh page) {
 		if (null != page.getObject1()&& ""!=page.getObject1()&&page.getObject3()!=null&&page.getObject3()!="") {
-			String jpql = "select a from Orders as a where a.consignee like '%'||:sname||'%' and a.usersCode =:ss and a.isOutOfStock=:is order by a.id desc ";
+			String jpql = "select a from Orders as a where a.consignee like '%'||?1||'%' and a.usersCode =?2 and a.isOutOfStock=?3 order by a.id desc ";
 			Query query = entityManager.createQuery(jpql);
-			query.setParameter("sname", page.getObject1());
-			query.setParameter("ss", page.getObject2());
-			query.setParameter("is", page.getObject3());
+			query.setParameter(1, page.getObject1());
+			query.setParameter(2, page.getObject2());
+			query.setParameter(3, page.getObject3());
 			return query.setMaxResults(page.getPageSize()).setFirstResult(page.getPageNow()).getResultList();
 		}else if(null != page.getObject1() && ""!= page.getObject1()) {
-			String jpql = "select a from Orders as a where a.consignee like '%'||:sname||'%' and a.usersCode =:ss order by a.id desc ";
+			String jpql = "select a from Orders as a where a.consignee like '%'||?1||'%' and a.usersCode =?2 order by a.id desc ";
 			Query query = entityManager.createQuery(jpql);
-			query.setParameter("sname", page.getObject1());
-			query.setParameter("ss", page.getObject2());
+			query.setParameter(1, page.getObject1());
+			query.setParameter(2, page.getObject2());
 			 return query.setMaxResults(page.getPageSize()).setFirstResult(page.getPageNow()).getResultList();
 		}else if(null != page.getObject3()&& page.getObject3()!="") {
-			String jpql = "select a from Orders as a where a.isOutOfStock =:is and a.usersCode =:ss order by a.id desc ";
+			String jpql = "select a from Orders as a where a.isOutOfStock =?1 and a.usersCode =?2 order by a.id desc ";
 			Query query = entityManager.createQuery(jpql);
-			query.setParameter("is", page.getObject3());
-			query.setParameter("ss", page.getObject2());
+			query.setParameter(1, page.getObject3());
+			query.setParameter(2, page.getObject2());
 			
 			 return query.setMaxResults(page.getPageSize()).setFirstResult(page.getPageNow()).getResultList();
 		}
 		else {
-			String jpql = "select a from Orders as a where a.usersCode=:ss order  by a.id desc ";
+			String jpql = "select a from Orders as a where a.usersCode=?1 order  by a.id desc ";
 			Query query = entityManager.createQuery(jpql);
-			query.setParameter("ss", page.getObject2());
+			query.setParameter(1, page.getObject2());
 			return query.setMaxResults(page.getPageSize()).setFirstResult(page.getPageNow()).getResultList();
 
 		}
 	}
 
 	public List<Orders> getOrders(String usersCode) {
-		String jpql = "select z from Orders as z where z.users_code=:code";
+		String jpql = "select z from Orders as z where z.usersCode=?1";
 		Query query = entityManager.createQuery(jpql);
-		query.setParameter("code", usersCode);
+		query.setParameter(1, usersCode);
 		return query.getResultList();
 	}
 
 	/**
-	 * µÃµ½¶©µ¥Î´·¢»õÊı¾İÌõÊı
+	 * å¾—åˆ°è®¢å•æœªå‘è´§æ•°æ®æ¡æ•°
 	 * 
 	 * @return
 	 */
 	public List<Orders> orderOutSelect(int pageNow, int pageSize, String is) {
-		String jpql = "select o from Orders as o where is_out_of_stock=:is ";
+		String jpql = "select o from Orders as o where o.isOutOfStock=?1 ";
 		Query query = entityManager.createQuery(jpql);
-		query.setParameter("is", is);
+		query.setParameter(1, is);
 		return query.setMaxResults(pageSize).setFirstResult(pageNow).getResultList();
 
 	};
 
 	/**
-	 * µÃµ½Êı¾İÌõÊı
+	 * å¾—åˆ°æ•°æ®æ¡æ•°
 	 * 
 	 * @return
 	 */
 	public int gettotal( String object1,String usersCode,String isOutOfStock) {
 		if (null != object1 && ""!=object1&&isOutOfStock!=null&&isOutOfStock!="") {
-			String jpql = "select count(o) from Orders as o  where o.consignee like '%'||:sname||'%' and o.isOutOfStock =:sn and o.usersCode =:ss";
+			String jpql = "select count(o) from Orders as o  where o.consignee like '%'||?1||'%' and o.isOutOfStock =?3 and o.usersCode =?2";
 			Query query = entityManager.createQuery(jpql);
-			query.setParameter("sname", object1);
-			query.setParameter("ss", usersCode);
-			query.setParameter("sn", isOutOfStock);
+			query.setParameter(1, object1);
+			query.setParameter(2, usersCode);
+			query.setParameter(3, isOutOfStock);
 			return Integer.valueOf( query.getResultList().get(0).toString());
 		}else if(null != object1 && ""!=object1) {
-			String jpql = "select count(o) from Orders as o  where o.consignee like '%'||:sname||'%'  and o.usersCode =:ss";
+			String jpql = "select count(o) from Orders as o  where o.consignee like '%'||?1||'%'  and o.usersCode =?2";
 			Query query = entityManager.createQuery(jpql);
-			query.setParameter("sname", object1);
-			query.setParameter("ss", usersCode);
+			query.setParameter(1, object1);
+			query.setParameter(2, usersCode);
 			return Integer.valueOf( query.getResultList().get(0).toString());
 		}else if(isOutOfStock!=null&&isOutOfStock!="") {
-			String jpql = "select count(o) from Orders as o  where   o.isOutOfStock =:sn and o.usersCode =:ss";
+			String jpql = "select count(o) from Orders as o  where   o.isOutOfStock =?2 and o.usersCode =?1";
 			Query query = entityManager.createQuery(jpql);
-			query.setParameter("ss", usersCode);
-			query.setParameter("sn", isOutOfStock);
+			query.setParameter(1, usersCode);
+			query.setParameter(2, isOutOfStock);
 			return Integer.valueOf( query.getResultList().get(0).toString());
 		}
 		
 		else {
-			String jpql = "select count(o) from Orders as o where o.usersCode=:ss ";
+			String jpql = "select count(o) from Orders as o where o.usersCode=?1 ";
 			Query query = entityManager.createQuery(jpql);
-			query.setParameter("ss", usersCode);
+			query.setParameter(1, usersCode);
 			return Integer.valueOf( query.getResultList().get(0).toString());
 		}
 	}
 
 	/**
-	 * µÃµ½ÒªĞŞ¸ÄµÄÊı¾İ
+	 * å¾—åˆ°è¦ä¿®æ”¹çš„æ•°æ®
 	 * 
 	 * @param id
 	 * @return
 	 */
 	public Orders updatequery(String code) {
-		String jpql = "select o from Orders as o where o.code=:code";
+		String jpql = "select o from Orders as o where o.code=?1";
 		Query query = entityManager.createQuery(jpql);
-		query.setParameter("code", code);
+		query.setParameter(1, code);
 		return (Orders) query.getSingleResult();
 	}
 
 	/**
-	 * ĞŞ¸ÄÊı¾İ ---------------------
+	 * ä¿®æ”¹æ•°æ® ---------------------
 	 * 
 	 * @param id
 	 * @param ter
 	 */
 	@Transactional
 	public void updateSave(Orders orders) {
-		String jpql = "update zj_orders set amount=:amount,receivingAddress=:radd,phone=:phone,consignee=:consignee where code=:code";
+		String jpql = "update zj_Orders set amount=?1,receiving_address=?2,phone=?3,consignee=?4 where code=?5";
 		Query query = entityManager.createNativeQuery(jpql);
-		query.setParameter("amount", orders.getAmount());
-		query.setParameter("radd", orders.getReceivingAddress());
-		query.setParameter("phone", orders.getPhone());
-		query.setParameter("consignee", orders.getConsignee());
-		query.setParameter("code", orders.getCode());
+		query.setParameter(1, orders.getAmount());
+		query.setParameter(2, orders.getReceivingAddress());
+		query.setParameter(3, orders.getPhone());
+		query.setParameter(4, orders.getConsignee());
+		query.setParameter(5, orders.getCode());
 		query.executeUpdate();
 	}
 }

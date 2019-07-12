@@ -308,7 +308,7 @@
 				<div class="left_sidebar">
 					<div class="sellers">
 						<h4 id="tableName"></h4>
-						<textarea id="tbodyId" rows="49" cols="36"></textarea>
+						<textarea id="tbodyId" rows="49" cols="36 " readOnly="readOnly"></textarea>
 						<input id="articleCode" name="code" type="hidden">
 					</div>
 					<input type="submit" class="" value="举报此文章">
