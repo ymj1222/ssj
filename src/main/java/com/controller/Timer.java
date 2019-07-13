@@ -85,6 +85,7 @@ public class Timer {
     		}
     		 list.add(ac);
             String parseJSON = JsonUtils.listToJson(list);
+            response.setCharacterEncoding("GBK");
     	response.getWriter().write(parseJSON);
     }
    

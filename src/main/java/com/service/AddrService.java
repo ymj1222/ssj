@@ -28,7 +28,6 @@ AddrDao dao;
 		return dao.findByCode(code);
 	}
 	public int queryNumber(String wayBillNo) {
-		System.out.println(wayBillNo);
 		WayBill ww=w.findByWayBillNo(wayBillNo);
 		return dao.queryNumber(Integer.toString(ww.getId()));
 	}

@@ -30,7 +30,7 @@ public class PlatformIController {
 				if (file.getSize() >0) {
 					String filen = file.getOriginalFilename();
 					String fileName = System.currentTimeMillis() + "."+filen.substring(filen.lastIndexOf(".")+1);
-					String destFileName = request.getServletContext().getRealPath("") + "photo" + File.separator + fileName;
+					String destFileName = request.getServletContext().getRealPath("") + "photo/" + fileName;
 					File destFile = new File(destFileName);
 					destFile.getParentFile().mkdirs();
 					file.transferTo(destFile);
@@ -39,7 +39,7 @@ public class PlatformIController {
 				if (file1.getSize()>0) {
 					String filen = file1.getOriginalFilename();
 					String fileName = System.currentTimeMillis() + "."+filen.substring(filen.lastIndexOf(".")+1);
-					String destFileName = request.getServletContext().getRealPath("") + "photo" + File.separator + fileName;
+					String destFileName = request.getServletContext().getRealPath("") + "photo/" +fileName;
 					File destFile = new File(destFileName);
 					destFile.getParentFile().mkdirs();
 					file1.transferTo(destFile);

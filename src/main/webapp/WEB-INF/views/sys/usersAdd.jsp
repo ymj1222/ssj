@@ -19,15 +19,7 @@
 	            return false; 
 	        } 
 	    }
-	 function checkWechat(){ 
-	        var phone = document.getElementById('wechat').value;
-	        if(!(/^1[34578]\d{9}$/.test(wechat))){ 
-	        	$("#wechat").val("");
-	            alert("微信号有误，请重填");  
-	            return false; 
-	        } 
-	    }
-		</script>	
+		</script>
 <body>
 	<div id="wrapper">
 		<!-- 头 -->
@@ -57,7 +49,7 @@
 									</div>
 									<div class="panel-body">
 										微信: 
-										<input type="text" id="wechat"maxlength="11" onchange="checkWechat();"name="wechat" required="required" />
+										<input type="text" id="wechat"maxlength="11" name="wechat" required="required" />
 									</div>
 									<div class="panel-body">
 									电话: <br />
