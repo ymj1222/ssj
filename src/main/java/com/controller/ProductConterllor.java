@@ -56,9 +56,12 @@ public class ProductConterllor {
 		List<String> list = new ArrayList<String>();
 		if (files != null && files.length > 0) {
 			for (int i = 0; i < files.length; i++) {
+				String filen = files[i].getOriginalFilename();
+				String fileName = System.currentTimeMillis() + "."+filen.substring(filen.lastIndexOf(".")+1);
+				String destFileName = request.getServletContext().getRealPath("") + "photo" + File.separator + fileName;
 				Photo photo = new Photo();
 				MultipartFile file = files[i];
-				photo.setUrl("photo/" + file.getOriginalFilename());
+				photo.setUrl("photo" + File.separator + fileName);
 				photo.setProductCode(product.getCode().toString());
 				CodeUtil CodeUtil = new CodeUtil();
 				photo.setCode(CodeUtil.getCode());
@@ -99,9 +102,11 @@ public class ProductConterllor {
 		// �ж��ļ��Ƿ�Ϊ��
 		if (!file.isEmpty()) {
 			try {
-				String path = ProUtil.getPhotokey() + file.getOriginalFilename();
+				String filen = file.getOriginalFilename();
+				String fileName = System.currentTimeMillis() + "."+filen.substring(filen.lastIndexOf(".")+1);
+				String destFileName = request.getServletContext().getRealPath("") + "photo" + File.separator + fileName;
 				list.add(file.getOriginalFilename());
-				File saveDir = new File(path);
+				File saveDir = new File(destFileName  );
 				if (!saveDir.getParentFile().exists())
 					saveDir.getParentFile().mkdirs();
 

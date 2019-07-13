@@ -5,13 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @date 2019年3月25日 TODO 商品類型實體
  */
 @Cacheable(true)
+@Table(name="producttype")
 @Entity
 public class ProductType implements Serializable {
 
@@ -34,8 +29,10 @@ public class ProductType implements Serializable {
 	private Long code;// 編號
 	private Byte level;
 	private String name;// 類型
+	@Column(name="createTime")
 	private Date createTime;// 創立日期
 	private String creator;// 創建人
+	@Column(name="lastUpdateTime")
 	private Date lastUpdateTime;// 最後修改時間
 	private String lastUpdater;// 最後修改人
 	@JsonIgnore

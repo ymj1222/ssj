@@ -31,22 +31,22 @@ public class WarehouseDao {
 	}
 
 	public Integer amount(Long code) {
-		Query query = entityManager.createQuery("select w.amount from Warehouse w where w.productCode= :code");
-		query.setParameter("code", code);
+		Query query = entityManager.createQuery("select w.amount from Warehouse w where w.productCode= ?1");
+		query.setParameter(1, code);
 		return (Integer) query.getSingleResult();
 	}
 
 	public void stockOut(Long code, Long amount) {
-		Query query = entityManager.createNativeQuery("update Warehouse set amount= :amount where productCode= :code");
-		query.setParameter("amount", amount);
-		query.setParameter("code", code);
+		Query query = entityManager.createNativeQuery("update Warehouse set amount= ?1 where product_Code= ?2");
+		query.setParameter(1, amount);
+		query.setParameter(2, code);
 		query.executeUpdate();
 	}
 
 	public List<Warehouse> selectwarehouse(String name, int pageNow, int pageSize) {
 		String sql = "select w from Warehouse  w where w.productCode in(select p.code from Product p where p.auditStatus=3 and isEffective=1) ";
 		if (name != null && name != "") {
-			sql += " and w.name like '%'||?||'%'";
+			sql += " and w.name like '%'||?1||'%'";
 		}
 		Query query = entityManager.createQuery(sql);
 		if (name != null && name != "") {
@@ -61,7 +61,7 @@ public class WarehouseDao {
 	public Long gettotal(String name) {
 		String sql = "select count(w) from Warehouse  w where w.productCode in(select p.code from Product p where p.auditStatus=3 and isEffective=1) ";
 		if (name != null && name != "") {
-			sql += " and w.name like '%'||?||'%'";
+			sql += " and w.name like '%'||?1||'%'";
 		}
 		Query query = entityManager.createQuery(sql);
 		if (name != null && name != "") {

@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.entity.Terminal;
 import com.service.TerminalService;
-import com.util.DateUtils;
-import com.util.GetNameUtil;
-import com.util.Page;
-import com.util.Pageh;
 
 @Controller
 public class TerminalConterllor {
@@ -102,8 +99,9 @@ public class TerminalConterllor {
 		Integer pageCount = 0;
 		pageh.setPageNow((Integer.parseInt(pageNow) - 1) * Integer.parseInt(pageSize));
 		pageh.setPageSize(Integer.parseInt(pageSize));
-		name.replaceAll("_", "\\\\_");
-		pageh.setObject1(name);
+//		name.replaceAll("_", "\\\\_");
+
+		pageh.setObject1(SearchTool.decodeSpecialCharsWhenLikeUseSlash(name));
 		pageCount = terminalService.gettotal(pageh);
 		List<Terminal> list = terminalService.select(pageh);
 		response.setCharacterEncoding("utf-8");

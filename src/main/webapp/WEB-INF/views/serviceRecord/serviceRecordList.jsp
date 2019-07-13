@@ -96,9 +96,7 @@
 								<div class="panel-body">
 										<div class="input-group">
 											<input type="text" name="name" id="shopp"
-												class="form-control" placeholder="导购员名称"> <input
-												type="text" name="user" id="user" class="form-control"
-												placeholder="用户名称"> <span class="input-group-btn"><button
+												class="form-control" placeholder="导购员名称"> <button
 													onclick="search();" type="submit" class="btn btn-primary">Go</button></span>
 										</div>
 									<table class="table table-bordered">

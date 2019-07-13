@@ -5,15 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,6 +16,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Cacheable(true)
 @Entity
+@Table(name="products")
+
 public class Product implements Serializable {
 
 	/**
@@ -36,13 +30,17 @@ public class Product implements Serializable {
 	private Long code;// 編號
 	private String name;// 名稱
 	private Float price;// 總價
+	@Column(name="auditStatus")
 	private Integer auditStatus;// 審批狀態
 	private String induction;// 介紹
 	private Date shelftime;// 上架時間
 	private String size;// 大小
 	private String color;// 顏色
+	@Column(name="sellValue")
 	private Float sellValue;// 銷售價
+	@Column(name="marketValue")
 	private Float marketValue;// 市場價
+	@Column(name="agentCode")
 	private Long agentCode;
 	public Long getAgentCode() {
 		return agentCode;
@@ -53,10 +51,13 @@ public class Product implements Serializable {
 	}
 
 	@Transient
+	@Column(name="TypeName")
 	private String TypeName;
 	@Transient
+	@Column(name="brandName")
 	private String brandName;
 	@Transient
+	@Column(name="agentName")
 	private String agentName;
 
 	public String getTypeName() {
@@ -154,11 +155,14 @@ public class Product implements Serializable {
 	public void setIsEffective(Integer isEffective) {
 		this.isEffective = isEffective;
 	}
-
+	@Column(name="isEffective")
 	private Integer isEffective;
+	@Column(name="createTime")
 	private Date createTime;// 創立日期
 	private String creator;// 創建人
+	@Column(name="lastUpdateTime")
 	private Date lastUpdateTime;// 最後修改時間
+	@Column(name="lastUpdater")
 	private String lastUpdater;// 最後修改人
 
 	public Integer getAmount() {

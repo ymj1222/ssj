@@ -51,7 +51,7 @@ public class TerminalDao {
 	public List<Terminal> select(Pageh pageh) {
 		String jpql = "select t from Terminal t";
 		if (pageh.getObject1() != null && !pageh.getObject1().equals("")) {
-			jpql += " where t.name like '%'||?||'%/' ";
+			jpql += " where t.name like '%'||?1||'%' ";
 		}
 		jpql+=" order by t.id desc";
 		Query query = entityManager.createQuery(jpql);
@@ -72,7 +72,7 @@ public class TerminalDao {
 	public String gettotal(Pageh pageh) {
 		String jpql = "select count(t) from Terminal t";
 		if (pageh.getObject1() != null && !pageh.getObject1().equals("")) {
-			jpql += " where t.name like '%'||?||'%/'";
+			jpql += " where t.name like '%'||?1||'%'";
 		} 
 		Query query = entityManager.createQuery(jpql);
 		if (pageh.getObject1() != null && !pageh.getObject1().equals("")) {

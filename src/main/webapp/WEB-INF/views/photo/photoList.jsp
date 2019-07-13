@@ -31,17 +31,19 @@
 											cont = cont + '<tr>';
 											cont = cont + '<td>' + obj.code
 													+ '</td>';
-											cont = cont + '<td>' + obj.productCode
-													+ '</td>';
 											cont = cont + '<td>' + obj.name
 													+ '</td>';
 											cont = cont + '<td><img src="' + obj.url
 													+ '" width="200" height="150"></td>';
 											cont = cont + '<td>' + obj.date
 													+ '</td>';
+											if(obj.productCode==""){
+                                                cont = cont + '<td>否</td>';
+                                            }else{
+                                                cont = cont + '<td>是</td>';
+                                            }
 											cont += '<td><a href=javascript:del("' + obj.code
-													+ '"); title="删除">删除</a>  ';
-											cont += '<a href="photoUpdate?code=' + obj.code
+													+ '"); title="删除">删除</a> &nbsp;&nbsp;<a href="photoUpdate?code=' + obj.code
 													+ '">修改</a></td>';		
 											cont = cont + '</tr>';
 										});
@@ -132,10 +134,10 @@
 										<thead>
 											<tr>
 												<th width="50">图片编号</th>
-												<th width="50">商品编号</th>
 												<th width="20">图片名</th>
 												<th width="100">图片</th>
 												<th width="50">上传时间</th>
+                                                <th width="50">是否为商品图片</th>
 												<th width="50">操作</th>
 											</tr>
 										</thead>

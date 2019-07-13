@@ -11,11 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -28,11 +30,6 @@ import com.service.PhotoService;
 import com.service.ServiceRecordService;
 import com.service.ShoppingGuideService;
 import com.service.UsersService;
-import com.util.DateUtils;
-import com.util.GetNameUtil;
-import com.util.Page;
-import com.util.Pageh;
-import com.util.ProUtil;
 
 @Controller
 public class ShoppingGuideConterllor {
@@ -51,9 +48,8 @@ public class ShoppingGuideConterllor {
 	private UsersService usersService;
 
 	/**
-	 * ï¿½Òµï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½
-	 * 
-	 * @return
+	 * ÕÒµ½µ¼¹ºÌí¼ÓÒ³Ãæ
+ 	 * @return
 	 */
 	@RequestMapping("/findshoppingGuideAdd")
 	public String findadd() {
@@ -61,8 +57,7 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ï¿½Òµï¿½ï¿½Ð±ï¿½Ò³ï¿½ï¿½
-	 * 
+	 * ÕÒµ½µ¼¹ºÁÐ±íÒ³Ãæ
 	 * @return
 	 */
 	@RequestMapping("/findshoppingGuideList")
@@ -71,16 +66,18 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	 * 
+	 * dµ¼¹ºÐÅÏ¢Ìí¼Ó
 	 * @param shoppingGuide
 	 * @param model
+	 * @param request
+	 * @param file
+	 * @param file1
 	 * @return
-	 * @throws IOException
 	 * @throws IllegalStateException
+	 * @throws IOException
 	 */
 	@RequestMapping(value = "/shoppingGuideAdd", method = RequestMethod.POST)
-	public String add(ShoppingGuide shoppingGuide, Model model, HttpServletRequest request)
+	public String add(ShoppingGuide shoppingGuide, Model model, HttpServletRequest request, @RequestParam("file") MultipartFile file, @RequestParam("file1") MultipartFile file1)
 			throws IllegalStateException, IOException {
 		if (shoppingGuide.getName() != null) {
 			String name = GetNameUtil.getName(request);
@@ -91,49 +88,44 @@ public class ShoppingGuideConterllor {
 			shoppingGuide.setUpdator(name);
 			shoppingGuide.setCreateTime(DateUtils.getCurrentDateTime());
 			shoppingGuide.setUpdateTime(DateUtils.getCurrentDateTime());
-			CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
-					request.getSession().getServletContext());
-			if (multipartResolver.isMultipart(request)) {
-				MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
-				Iterator<?> iter = multiRequest.getFileNames();
-				while (iter.hasNext()) {
-					MultipartFile file = multiRequest.getFile(iter.next().toString());
-					MultipartFile file1 = multiRequest.getFile(iter.next().toString());
-					if (file != null) {
-						String path = ProUtil.getPhotokey() + file.getOriginalFilename();
-						file.transferTo(new File(path));
-						shoppingGuide.setPhoto("photo/" + file.getOriginalFilename());
-						Photo photo = new Photo();
-						photo.setCode(code);
-						photo.setName(shoppingGuide.getName());
-						photo.setUrl("photo/" + file.getOriginalFilename());
-						photo.setCreateTime(DateUtils.getCurrentDateString());
-						photo.setDate(DateUtils.getCurrentDateString());
-						photo.setCreator(name);
-						photo.setUpdator(name);
-						photo.setUpdateTime(DateUtils.getCurrentDateString());
-						photoService.add(photo);
-					}
-					if (file1 != null) {
-						String paths = ProUtil.getPhotokey() + file1.getOriginalFilename();
-						file1.transferTo(new File(paths));
-						shoppingGuide.setWechatTwoDimensionalCode("photo/" + file1.getOriginalFilename());
-						Photo photo = new Photo();
-						long bs1 = System.currentTimeMillis();
-						String code1 = Long.toString(bs1);
-						photo.setCode(code1);
-						photo.setName(shoppingGuide.getName() + "ï¿½ï¿½Î¢ï¿½ï¿½");
-						photo.setUrl("photo/" + file1.getOriginalFilename());
-						photo.setDate(DateUtils.getCurrentDateString());
-						photo.setCreateTime(DateUtils.getCurrentDateString());
-						photo.setCreator(name);
-						photo.setUpdator(name);
-						photo.setUpdateTime(DateUtils.getCurrentDateString());
-						photoService.add(photo);
-					}
-				}
+			if(file.getSize()>0){
+				String filen = file.getOriginalFilename();
+				String fileName = System.currentTimeMillis() + "."+filen.substring(filen.lastIndexOf(".")+1);
+				String destFileName = request.getServletContext().getRealPath("") + "photo" + File.separator + fileName;
+				System.out.println(destFileName);
+				shoppingGuide.setPhoto("photo" + File.separator + fileName);
+				File destFile = new File(destFileName);
+				destFile.getParentFile().mkdirs();
+				file.transferTo(destFile);
+				Photo photo = new Photo();
+				photo.setUrl("photo" + File.separator + fileName);
+				photo.setCode(code);
+				photo.setDate(DateUtils.getCurrentDateString());
+				photo.setCreator(GetNameUtil.getName(request));
+				photo.setUpdator(GetNameUtil.getName(request));
+				photo.setCreateTime(DateUtils.getCurrentDateString());
+				photo.setUpdateTime(DateUtils.getCurrentDateString());
+				photoService.add(photo);
 			}
-
+			if(file1.getSize()>0){
+				String filen = file1.getOriginalFilename();
+				String fileName = System.currentTimeMillis() + "."+filen.substring(filen.lastIndexOf(".")+1);
+				String destFileName = request.getServletContext().getRealPath("") + "photo" + File.separator + fileName;
+				System.out.println(destFileName);
+				shoppingGuide.setWechatTwoDimensionalCode("photo" + File.separator + fileName);
+				File destFile = new File(destFileName);
+				destFile.getParentFile().mkdirs();
+				file1.transferTo(destFile);
+				Photo photo = new Photo();
+				photo.setUrl("photo" + File.separator + fileName);
+				photo.setCode(code);
+				photo.setDate(DateUtils.getCurrentDateString());
+				photo.setCreator(GetNameUtil.getName(request));
+				photo.setUpdator(GetNameUtil.getName(request));
+				photo.setCreateTime(DateUtils.getCurrentDateString());
+				photo.setUpdateTime(DateUtils.getCurrentDateString());
+				photoService.add(photo);
+			}
 			shoppingGuideService.add(shoppingGuide);
 			accountController.addDaoGou(shoppingGuide.getName(),shoppingGuide.getCode(), request);
 		}
@@ -141,9 +133,9 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ï¿½ï¿½ï¿½ï¿½idÉ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	 * 
+	 * ¸ù¾ÝIDÉ¾³ýÊý¾Ý
 	 * @param id
+	 * @return
 	 */
 	@RequestMapping("/shoppingGuideDelete")
 	public String delete(String id) {
@@ -152,9 +144,10 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	 * 
+	 * ´ø·ÖÒ³µÄÄ£ºý²éÑ¯
 	 * @param model
+	 * @param request
+	 * @param response
 	 * @return
 	 * @throws IOException
 	 */
@@ -174,8 +167,8 @@ public class ShoppingGuideConterllor {
 		}
 		pageh.setPageNow((Integer.parseInt(pageNow) - 1) * Integer.parseInt(pageSize));
 		pageh.setPageSize(Integer.parseInt(pageSize));
-		name=name.replaceAll("_", "\\\\_");
-		pageh.setObject1(name);
+//		name=name.replaceAll("_", "\\\\_");
+		pageh.setObject1(SearchTool.decodeSpecialCharsWhenLikeUseSlash(name));
 		int pageCount = 0;
 		pageCount = shoppingGuideService.gettotal(pageh);
 		List<ShoppingGuide> list = shoppingGuideService.select(pageh);
@@ -186,11 +179,11 @@ public class ShoppingGuideConterllor {
 		return page;
 	}
 
-	/**
-	 * ï¿½Ãµï¿½Òªï¿½Þ¸Äµï¿½ï¿½ï¿½ï¿½ï¿½
-	 * 
+
+	 /* *
+	 * µÃµ½ÒªÐÞ¸ÄµÄÊý¾Ý
 	 * @param id
-	 * @param model
+	 * @param map
 	 * @return
 	 */
 	@RequestMapping("/shoppingGuideUpdate")
@@ -201,10 +194,9 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½
-	 * 
-	 * @param id
+	 * ÐÞ¸ÄÊý¾Ý
 	 * @param shoppingGuide
+	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/shoppingGuideUpdateSave")
@@ -217,9 +209,9 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½×¥È¥ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ò£¬½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½Ä³ï¿½Ã¦ï¿½ï¿½
-	 * 
+	 * Ã¦Âµ
 	 * @param id
+	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/updatetypebusy")
@@ -232,9 +224,10 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ßµï¿½Ê±ï¿½ò£¬»ï¿½ï¿½ß·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½×´Ì¬ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½
-	 * 
+	 * ÔÚÏß
 	 * @param id
+	 * @param starttime
+	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/updatetypeon")
@@ -248,9 +241,8 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ï¿½Í·ï¿½ï¿½ï¿½ï¿½ß£ï¿½ï¿½ï¿½×´Ì¬ï¿½Ä³ï¿½ï¿½ï¿½ï¿½ï¿½
-	 * 
-	 * @return
+	 * ÀëÏß
+	 * @param code
 	 */
 	@RequestMapping("/updatetypeoff")
 	public void updatetypeoff(String code) {
@@ -258,9 +250,10 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	 * 
+	 * µ¼¹º·þÎñ¼ÇÂ¼Ìí¼Ó
 	 * @param serviceRecord
+	 * @param ShoppingGuideId
+	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/updatetypefuck")

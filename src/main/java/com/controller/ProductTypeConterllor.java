@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.service.ProductTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.entity.ProductType;
-import com.service.ProductTypeService;
 import com.util.CodeUtil;
 import com.util.DateUtils;
 import com.util.JsonUtils;
@@ -58,6 +58,7 @@ public class ProductTypeConterllor {
 	@RequestMapping("/ProductTypedelete")
 	public String delete(long code) {
 		productTypeService.delete(code);
+
 		return "forward:ToProductTypeselect";
 	}
 

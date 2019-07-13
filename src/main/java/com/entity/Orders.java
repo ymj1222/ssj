@@ -10,181 +10,181 @@ import javax.persistence.Table;
 @Entity
 @Table(name="zj_orders")
 public class Orders {
-	@Id //±ê¼ÇÎªÒ»¸öÖ÷¼ü×Ö¶Î
-	@GeneratedValue(strategy = GenerationType.IDENTITY) // ×ÔÔö³¤Ö÷¼üÉú³É²ßÂÔ
-private Integer id;
-private String productCode;//ÉÌÆ·±àºÅ
-private String code;//±àºÅ
-private String productName;//ÉÌÆ·Ãû×Ö
-private float price;//¼Û¸ñ
-private int amount;//ÉÌÆ·ÊıÁ¿
-private String receivingAddress;//ÊÕ»õµØÖ·
-private String phone;//ÊÕ»õÈËµç»°
-private String consignee;//ÊÕ»õÈË
-private String deliveryTime;//µ½»õÊ±¼ä
-private int isconfirmreceipt;//ÊÇ·ñÈ·ÈÏÊÕ»õ
-private String receivingTime;//ÊÕ»õÊ±¼ä
-private String usersCode;//¹Ë¿Í±àºÅ
-private String createTime;
-private String createor;
-private String lastUpdateTime;
-private String lastUpdater;
-private String logisticsNumber;//ÔËµ¥±àºÅ
-private int orderState;//¶©µ¥×´Ì¬
-private String evaluation;//¶©µ¥ÆÀ¼Û
-public Product getProduct() {
-	return product;
-}
-public void setProduct(Product product) {
-	this.product = product;
-}
-public WarehousingAndOut getWao() {
-	return wao;
-}
-public void setWao(WarehousingAndOut wao) {
-	this.wao = wao;
-}
-private String isOutOfStock;//ÊÇ·ñ·¢»õ
-@ManyToOne
-private Product product;
-@OneToOne
-private WarehousingAndOut wao;
+	@Id //æ ‡è®°ä¸ºä¸€ä¸ªä¸»é”®å­—æ®µ
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // è‡ªå¢é•¿ä¸»é”®ç”Ÿæˆç­–ç•¥
+	private Integer id;
+	private String productCode;//å•†å“ç¼–å·
+	private String code;//ç¼–å·
+	private String productName;//å•†å“åå­—
+	private float price;//ä»·æ ¼
+	private int amount;//å•†å“æ•°é‡
+	private String receivingAddress;//æ”¶è´§åœ°å€
+	private String phone;//æ”¶è´§äººç”µè¯
+	private String consignee;//æ”¶è´§äºº
+	private String deliveryTime;//åˆ°è´§æ—¶é—´
+	private int isconfirmreceipt;//æ˜¯å¦ç¡®è®¤æ”¶è´§
+	private String receivingTime;//æ”¶è´§æ—¶é—´
+	private String usersCode;//é¡¾å®¢ç¼–å·
+	private String createTime;
+	private String createor;
+	private String lastUpdateTime;
+	private String lastUpdater;
+	private String logisticsNumber;//è¿å•ç¼–å·
+	private int orderState;//è®¢å•çŠ¶æ€
+	private String evaluation;//è®¢å•è¯„ä»·
+	public Product getProduct() {
+		return product;
+	}
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+	public WarehousingAndOut getWao() {
+		return wao;
+	}
+	public void setWao(WarehousingAndOut wao) {
+		this.wao = wao;
+	}
+	private String isOutOfStock;//æ˜¯å¦å‘è´§
+	@ManyToOne
+	private Product product;
+	@OneToOne
+	private WarehousingAndOut wao;
 
-@Override
-public String toString() {
-	return "Orders [id=" + id + ", productCode=" + productCode + ", code=" + code + ", productName=" + productName
-			+ ", price=" + price + ", amount=" + amount + ", receivingAddress=" + receivingAddress + ", phone=" + phone
-			+ ", consignee=" + consignee + ", deliveryTime=" + deliveryTime + ", isconfirmreceipt=" + isconfirmreceipt
-			+ ", receivingTime=" + receivingTime + ", usersCode=" + usersCode + ", createTime=" + createTime
-			+ ", createor=" + createor + ", lastUpdateTime=" + lastUpdateTime + ", lastUpdater=" + lastUpdater
-			+ ", logisticsNumber=" + logisticsNumber + ", orderState=" + orderState + ", evaluation=" + evaluation
-			+ ", isOutOfStock=" + isOutOfStock + ", product=" + product + ", wao=" + wao + "]";
-}
-public String getIsOutOfStock() {
-	return isOutOfStock;
-}
-public void setIsOutOfStock(String isOutOfStock) {
-	this.isOutOfStock = isOutOfStock;
-}
-public String getEvaluation() {
-	return evaluation;
-}
-public void setEvaluation(String evaluation) {
-	this.evaluation = evaluation;
-}
-public int getOrderState() {
-	return orderState;
-}
-public void setOrderState(int orderState) {
-	this.orderState = orderState;
-}
-public Integer getId() {
-	return id;
-}
-public void setId(Integer id) {
-	this.id = id;
-}
-public String getProductCode() {
-	return productCode;
-}
-public void setProductCode(String productCode) {
-	this.productCode = productCode;
-}
-public String getCode() {
-	return code;
-}
-public void setCode(String code) {
-	this.code = code;
-}
-public String getProductName() {
-	return productName;
-}
-public void setProductName(String productName) {
-	this.productName = productName;
-}
-public float getPrice() {
-	return price;
-}
-public void setPrice(float price) {
-	this.price = price;
-}
-public int getAmount() {
-	return amount;
-}
-public void setAmount(int amount) {
-	this.amount = amount;
-}
-public String getReceivingAddress() {
-	return receivingAddress;
-}
-public void setReceivingAddress(String receivingAddress) {
-	this.receivingAddress = receivingAddress;
-}
-public String getPhone() {
-	return phone;
-}
-public void setPhone(String phone) {
-	this.phone = phone;
-}
-public String getConsignee() {
-	return consignee;
-}
-public void setConsignee(String consignee) {
-	this.consignee = consignee;
-}
-public String getDeliveryTime() {
-	return deliveryTime;
-}
-public void setDeliveryTime(String deliveryTime) {
-	this.deliveryTime = deliveryTime;
-}
-public int getIsconfirmreceipt() {
-	return isconfirmreceipt;
-}
-public void setIsconfirmreceipt(int isconfirmreceipt) {
-	this.isconfirmreceipt = isconfirmreceipt;
-}
-public String getReceivingTime() {
-	return receivingTime;
-}
-public void setReceivingTime(String receivingTime) {
-	this.receivingTime = receivingTime;
-}
-public String getUsersCode() {
-	return usersCode;
-}
-public void setUsersCode(String usersCode) {
-	this.usersCode = usersCode;
-}
-public String getCreateTime() {
-	return createTime;
-}
-public void setCreateTime(String createTime) {
-	this.createTime = createTime;
-}
-public String getCreateor() {
-	return createor;
-}
-public void setCreateor(String createor) {
-	this.createor = createor;
-}
-public String getLastUpdateTime() {
-	return lastUpdateTime;
-}
-public void setLastUpdateTime(String lastUpdateTime) {
-	this.lastUpdateTime = lastUpdateTime;
-}
-public String getLastUpdater() {
-	return lastUpdater;
-}
-public void setLastUpdater(String lastUpdater) {
-	this.lastUpdater = lastUpdater;
-}
-public String getLogisticsNumber() {
-	return logisticsNumber;
-}
-public void setLogisticsNumber(String logisticsNumber) {
-	this.logisticsNumber = logisticsNumber;
-}
+	@Override
+	public String toString() {
+		return "Orders [id=" + id + ", productCode=" + productCode + ", code=" + code + ", productName=" + productName
+				+ ", price=" + price + ", amount=" + amount + ", receivingAddress=" + receivingAddress + ", phone=" + phone
+				+ ", consignee=" + consignee + ", deliveryTime=" + deliveryTime + ", isconfirmreceipt=" + isconfirmreceipt
+				+ ", receivingTime=" + receivingTime + ", usersCode=" + usersCode + ", createTime=" + createTime
+				+ ", createor=" + createor + ", lastUpdateTime=" + lastUpdateTime + ", lastUpdater=" + lastUpdater
+				+ ", logisticsNumber=" + logisticsNumber + ", orderState=" + orderState + ", evaluation=" + evaluation
+				+ ", isOutOfStock=" + isOutOfStock + ", product=" + product + ", wao=" + wao + "]";
+	}
+	public String getIsOutOfStock() {
+		return isOutOfStock;
+	}
+	public void setIsOutOfStock(String isOutOfStock) {
+		this.isOutOfStock = isOutOfStock;
+	}
+	public String getEvaluation() {
+		return evaluation;
+	}
+	public void setEvaluation(String evaluation) {
+		this.evaluation = evaluation;
+	}
+	public int getOrderState() {
+		return orderState;
+	}
+	public void setOrderState(int orderState) {
+		this.orderState = orderState;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getProductCode() {
+		return productCode;
+	}
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	public float getPrice() {
+		return price;
+	}
+	public void setPrice(float price) {
+		this.price = price;
+	}
+	public int getAmount() {
+		return amount;
+	}
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
+	public String getReceivingAddress() {
+		return receivingAddress;
+	}
+	public void setReceivingAddress(String receivingAddress) {
+		this.receivingAddress = receivingAddress;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getConsignee() {
+		return consignee;
+	}
+	public void setConsignee(String consignee) {
+		this.consignee = consignee;
+	}
+	public String getDeliveryTime() {
+		return deliveryTime;
+	}
+	public void setDeliveryTime(String deliveryTime) {
+		this.deliveryTime = deliveryTime;
+	}
+	public int getIsconfirmreceipt() {
+		return isconfirmreceipt;
+	}
+	public void setIsconfirmreceipt(int isconfirmreceipt) {
+		this.isconfirmreceipt = isconfirmreceipt;
+	}
+	public String getReceivingTime() {
+		return receivingTime;
+	}
+	public void setReceivingTime(String receivingTime) {
+		this.receivingTime = receivingTime;
+	}
+	public String getUsersCode() {
+		return usersCode;
+	}
+	public void setUsersCode(String usersCode) {
+		this.usersCode = usersCode;
+	}
+	public String getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+	public String getCreateor() {
+		return createor;
+	}
+	public void setCreateor(String createor) {
+		this.createor = createor;
+	}
+	public String getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+	public void setLastUpdateTime(String lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
+	}
+	public String getLastUpdater() {
+		return lastUpdater;
+	}
+	public void setLastUpdater(String lastUpdater) {
+		this.lastUpdater = lastUpdater;
+	}
+	public String getLogisticsNumber() {
+		return logisticsNumber;
+	}
+	public void setLogisticsNumber(String logisticsNumber) {
+		this.logisticsNumber = logisticsNumber;
+	}
 
 }

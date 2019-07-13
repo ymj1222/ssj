@@ -5,13 +5,7 @@ package com.entity;
 
 import java.util.Date;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,18 +15,24 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Cacheable(true)
 @Entity
+
 public class WarehousingAndOut {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	@Column(name="productCode")
 	private Long productCode;
 	private Integer type;
 	private Date date;
 	private Integer amount;
+	@Column(name="ordersCode")
 	private Long ordersCode;
+	@Column(name="createTime")
 	private Date createTime;// 創立日期
 	private String creator;// 創建人
+	@Column(name="lastUpdateTime")
 	private Date lastUpdateTime;// 最後修改時間
+	@Column(name="lastUpdater")
 	private String lastUpdater;// 最後修改人
 	@OneToOne
 	private Orders order;

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.entity.InformationPush;
 import com.service.InformationPushService;
-import com.util.DateUtils;
-import com.util.GetNameUtil;
-import com.util.JsonUtils;
-import com.util.Page;
-import com.util.Pageh;
 
 @Controller
 public class InformationPushConterllor {
@@ -89,8 +85,8 @@ public class InformationPushConterllor {
 		Integer pageCount = 0;
 		pageh.setPageNow((Integer.parseInt(pageNow) - 1) * Integer.parseInt(pageSize));
 		pageh.setPageSize(Integer.parseInt(pageSize));
-		phone.replaceAll("_", "\\\\_");
-		pageh.setPhone(phone);
+//		phone.replaceAll("_", "\\\\_");
+		pageh.setPhone(SearchTool.decodeSpecialCharsWhenLikeUseSlash(phone));
 		pageCount = informationPushService.gettotal(pageh);
 		List<InformationPush> list = informationPushService.select(pageh);
 		response.setCharacterEncoding("utf-8");
