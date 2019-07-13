@@ -51,13 +51,13 @@ public class PhotoConterllor {
 
         String filen = file.getOriginalFilename();
         String fileName = System.currentTimeMillis() + "."+filen.substring(filen.lastIndexOf(".")+1);
-        String destFileName = request.getServletContext().getRealPath("") + "photo" + File.separator + fileName;
+        String destFileName = request.getServletContext().getRealPath("") + "photo/"+ fileName;
         System.out.println(destFileName);
         File destFile = new File(destFileName);
         destFile.getParentFile().mkdirs();
         file.transferTo(destFile);
 
-        photo.setUrl("photo" + File.separator + fileName);
+        photo.setUrl("photo/"+ fileName);
 		photo.setCode(code);
 		photo.setDate(DateUtils.getCurrentDateString());
 		photo.setCreator(GetNameUtil.getName(request));

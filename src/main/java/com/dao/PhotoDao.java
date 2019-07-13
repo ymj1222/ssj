@@ -32,7 +32,7 @@ public class PhotoDao {
 		List<Photo> list = query.getResultList();
 		return list;
 		}else {
-		Query query = entityManager.createQuery("FROM Photo");
+		Query query = entityManager.createQuery("FROM Photo order by id desc");
 		query.setFirstResult(pageh.getPageNow());
 		query.setMaxResults(pageh.getPageSize());
 		List<Photo> list = query.getResultList();
