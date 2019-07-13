@@ -111,19 +111,10 @@ public class PhotoConterllor {
 	}
 	@RequestMapping(value = "/photoUpdateSave")
 	public String updateSave(Photo photo) {
-		try {
 			String name = photo.getName();
-			name = new String(name.getBytes("iso-8859-1"),"utf-8");
 			photo.setName(name);
 			photo.setUpdateTime(DateUtils.getCurrentDateString());
 		photoService.update(photo);
-			
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-		}
-		
 		return "forward:/WEB-INF/views/photo/photoList.jsp";
 	}
 }
