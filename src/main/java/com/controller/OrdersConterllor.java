@@ -1,4 +1,4 @@
-package com.controller;
+package com.controll;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -74,8 +74,8 @@ public class OrdersConterllor {
 	}
 
 	/**
-	 * �ҵ��б�ҳ��
-	 * 
+	 * 找到列表页面
+	 *
 	 * @return
 	 */
 	@RequestMapping("/findOrdersList")
@@ -84,8 +84,8 @@ public class OrdersConterllor {
 	}
 
 	/**
-	 * �ҵ�����ҳ��
-	 * 
+	 * 找到发货页面
+	 *
 	 * @return
 	 */
 	@RequestMapping("/findOrdersOut")
@@ -94,8 +94,8 @@ public class OrdersConterllor {
 	}
 
 	/**
-	 * �������
-	 * 
+	 * 数据添加
+	 *
 	 * @param ter
 	 * @param model
 	 * @return
@@ -105,8 +105,8 @@ public class OrdersConterllor {
 		HttpSession hs = request.getSession();
 		Product p = ps.updatequery(Long.valueOf(orders.getProductCode()));
 		String account = (String) hs.getAttribute("account");
-		 String usersCode=us.queryByAccount(account);
-		 orders.setUsersCode(usersCode);
+		String usersCode=us.queryByAccount(account);
+		orders.setUsersCode(usersCode);
 		orders.setLastUpdater(GetNameUtil.getName(request));
 		orders.setCreateor(GetNameUtil.getName(request));
 		long bs = System.currentTimeMillis();
@@ -123,8 +123,8 @@ public class OrdersConterllor {
 	}
 
 	/**
-	 * ��Ӷ���
-	 * 
+	 * 添加订单
+	 *
 	 * @param ter
 	 * @param model
 	 * @return
@@ -134,7 +134,7 @@ public class OrdersConterllor {
 		HttpSession hs = request.getSession();
 		String account = (String) hs.getAttribute("account");
 		String usersCode=us.queryByAccount(account);
-		 orders.setUsersCode(usersCode);
+		orders.setUsersCode(usersCode);
 		orders.setLastUpdater(GetNameUtil.getName(request));
 		orders.setCreateor(GetNameUtil.getName(request));
 		long bs = System.currentTimeMillis();
@@ -145,14 +145,14 @@ public class OrdersConterllor {
 		orders.setIsOutOfStock("0");
 		orders.setIsconfirmreceipt(0);
 		orders.setOrderState(1);
-		orders.setReceivingTime("δ�ջ�");
+		orders.setReceivingTime("未收货");
 		orderService.add(orders);
 		return "redirect:myOrders";
 	}
 
 	/**
-	 * �õ���������
-	 * 
+	 * 得到所有数据
+	 *
 	 * @param model
 	 * @return
 	 * @throws IOException
@@ -163,10 +163,10 @@ public class OrdersConterllor {
 		Page page = new Page();
 		HttpSession hs = request.getSession();
 		String account = (String) hs.getAttribute("account");
-		 String usersCode=us.queryByAccount(account);
+		String usersCode=us.queryByAccount(account);
 		String sname = request.getParameter("sname");
 		String isOutOfStock=request.getParameter("isOutOfStock");
-		System.out.println(isOutOfStock+"==================");
+		System.out.println(isOutOfStock+"....");
 		String pageNow = request.getParameter("pageNow");
 		String pageSize = request.getParameter("pageSize");
 		if (null == pageNow || "".equals(pageNow.trim())) {
@@ -189,9 +189,9 @@ public class OrdersConterllor {
 		page.setList(list);
 		page.setPageNow(Integer.parseInt(pageNow));
 		return page;/*
-					 * String parseJSON = JsonUtils.beanToJson(page);
-					 * response.getWriter().write(parseJSON);
-					 */
+		 * String parseJSON = JsonUtils.beanToJson(page);
+		 * response.getWriter().write(parseJSON);
+		 */
 	}
 
 	@RequestMapping(value = "/finOrdersUpdate")
@@ -201,8 +201,8 @@ public class OrdersConterllor {
 	}
 
 	/**
-	 * �õ�Ҫ�޸ĵ�����
-	 * 
+	 * 得到要修改的数据
+	 *
 	 * @param id
 	 * @param model
 	 * @return
@@ -244,8 +244,8 @@ public class OrdersConterllor {
 	}
 
 	/**
-	 * �޸�����
-	 * 
+	 * 修改数据
+	 *
 	 * @param id
 	 * @param order
 	 * @return
@@ -276,31 +276,31 @@ public class OrdersConterllor {
 	}
 
 	/**
-	 * ����
-	 * 
+	 * 发货
+	 *
 	 * @param code
 	 * @param order
 	 * @return
 	 */
 	@RequestMapping("/ordersOut")
 	public String ordersOut(String code, Orders orders, String proCode, HttpServletRequest request) {
-		 String logisticsNumber =as.addAccountWayBill(orders);
-		 orders.setLogisticsNumber(logisticsNumber);
+		String logisticsNumber =as.addAccountWayBill(orders);
+		orders.setLogisticsNumber(logisticsNumber);
 		Integer amount = Integer.valueOf(orders.getAmount());
 		String productCode = orders.getProductCode();
 		Long s = Long.valueOf(productCode);
 		Date createTime = Date.valueOf(DateUtils.getCurrentDateString());
 		Long ordersCode = Long.valueOf(orders.getCode());
 		String creator = GetNameUtil.getName(request);
-		 ws.stock(amount, s, createTime, creator,ordersCode);
+		ws.stock(amount, s, createTime, creator,ordersCode);
 		orders.setIsOutOfStock("1");
-		 orderService.ordersOut(code, orders.getIsOutOfStock(),logisticsNumber);
+		orderService.ordersOut(code, orders.getIsOutOfStock(),logisticsNumber);
 		return "redirect:/findOrdersOut";
 	}
 
 	/**
-	 * ����
-	 * 
+	 * 评价
+	 *
 	 * @param code
 	 * @param order
 	 * @return
@@ -312,8 +312,8 @@ public class OrdersConterllor {
 	}
 
 	/**
-	 * �ջ�
-	 * 
+	 * 收货
+	 *
 	 * @param code
 	 * @param order
 	 * @return
@@ -332,8 +332,8 @@ public class OrdersConterllor {
 	}
 
 	/**
-	 * �ҵĶ����ջ�
-	 * 
+	 * 我的订单收货
+	 *
 	 * @param code
 	 * @param order
 	 * @return
@@ -344,8 +344,8 @@ public class OrdersConterllor {
 	}
 
 	/**
-	 * �ҵĶ����ջ�
-	 * 
+	 * 我的订单收货
+	 *
 	 * @param code
 	 * @param order
 	 * @return
@@ -359,8 +359,8 @@ public class OrdersConterllor {
 	}
 
 	/**
-	 * ������ȡ������
-	 * 
+	 * 发货后取消订单
+	 *
 	 * @param code
 	 * @param order
 	 * @return
@@ -376,8 +376,8 @@ public class OrdersConterllor {
 	}
 
 	/**
-	 * δ����ȡ������
-	 * 
+	 * 未发货取消订单
+	 *
 	 * @param code
 	 * @param order
 	 * @return
@@ -397,11 +397,11 @@ public class OrdersConterllor {
 	}*/
 
 	/**
-	 * ������ʷ
-	 * 
+	 * 订单历史
+	 *
 	 * @param code
 	 * @param order
-	 * @return 
+	 * @return
 	 * @return
 	 * @throws IOException
 	 */
@@ -414,8 +414,8 @@ public class OrdersConterllor {
 	}
 
 	/**
-	 * ����ʱ��
-	 * 
+	 * 到货时间
+	 *
 	 * @param code
 	 * @param order
 	 * @return
