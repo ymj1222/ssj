@@ -61,7 +61,7 @@ public class ProductConterllor {
 				String destFileName = request.getServletContext().getRealPath("") + "photo" + File.separator + fileName;
 				Photo photo = new Photo();
 				MultipartFile file = files[i];
-				photo.setUrl("photo" + File.separator + fileName);
+				photo.setUrl("photo/"+ fileName);
 				photo.setProductCode(product.getCode().toString());
 				CodeUtil CodeUtil = new CodeUtil();
 				photo.setCode(CodeUtil.getCode());
@@ -103,7 +103,7 @@ public class ProductConterllor {
 		if (!file.isEmpty()) {
 			try {
 
-				String destFileName = request.getServletContext().getRealPath("") + "photo" + File.separator + fileName;
+				String destFileName = request.getServletContext().getRealPath("") + "photo/"+ fileName;
 				list.add(file.getOriginalFilename());
 				File saveDir = new File(destFileName  );
 				if (!saveDir.getParentFile().exists())
