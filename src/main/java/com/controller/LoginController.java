@@ -46,16 +46,16 @@ public class LoginController{
 			Verification user  = userService.valid(account,password);
 			if(user==null||"".equals(user.getAccount())) {
 				request.setAttribute("hiddenCode", "1");
-				request.setAttribute("errorMark", "è´¦å·æˆ–è€…å¯†ç é”™è¯¯");
+				request.setAttribute("errorMark", "ÕËºÅ»òÕßÃÜÂë´íÎó");
 				if("fuck".equals(fuck)) {
 					return "forward:/qLogin.jsp";
 				}else {
 					return "forward:/login.jsp";
 				}
 			}
-				if (null == hiddenCode || "".equals(hiddenCode)) {// ç­‰äºç©ºçš„æ—¶ï¿½??
-				//å¦‚æœç”¨æˆ·åæ­£ï¿½?,å°±è·³è½¬åˆ°æˆåŠŸé¡µé¢
-				if (account.equals(user.getAccount()) && password.equals(user.getPassword())) {// å¦‚æœéªŒè¯ç æ­£ç¡®ï¼Œç”¨æˆ·åå’Œå¯†ç ä¹Ÿæ­£ç¡®ï¼Œè·³è½¬åˆ°æ¬¢è¿é¡µï¿½?
+				if (null == hiddenCode || "".equals(hiddenCode)) {// µÈÓÚ¿ÕµÄÊ±???
+				//Èç¹ûÓÃ»§ÃûÕı??,¾ÍÌø×ªµ½³É¹¦Ò³Ãæ
+				if (account.equals(user.getAccount()) && password.equals(user.getPassword())) {// Èç¹ûÑéÖ¤ÂëÕıÈ·£¬ÓÃ»§ÃûºÍÃÜÂëÒ²ÕıÈ·£¬Ìø×ªµ½»¶Ó­Ò³??
 					hs.setAttribute("account", account);
 					String isAdmin=ac.queryByAccount(account).getIsAdmin();
 					String authCode="";
@@ -81,7 +81,7 @@ public class LoginController{
 				else
 				{
 					request.setAttribute("hiddenCode", "1");
-					request.setAttribute("errorMark", "è´¦å·æˆ–è€…å¯†ç é”™è¯¯");
+					request.setAttribute("errorMark", "ÕËºÅ»òÕßÃÜÂë´íÎó");
 					if("fuck".equals(fuck)) {
 						return "forward:/qLogin.jsp";
 					}else {
@@ -89,14 +89,14 @@ public class LoginController{
 					}
 				}
 			}
-			// ä¸æ˜¯ç¬¬ä¸€æ¬¡ç™»ï¿½?,é¦–å…ˆï¿½?è¦è¿›è¡ŒéªŒè¯ç è®¤è¯
+			// ²»ÊÇµÚÒ»´ÎµÇ??,Ê×ÏÈ??Òª½øĞĞÑéÖ¤ÂëÈÏÖ¤
 			else
 			{
-				//å¿½ç•¥å¤§å°ï¿½?
+				//ºöÂÔ´óĞ¡??
 				if(randomCode.equalsIgnoreCase(trueRandomCode))
 				{
-					//å¦‚æœç”¨æˆ·åæ­£ï¿½?,å°±è·³è½¬åˆ°æˆåŠŸé¡µé¢
-					if (account.equals(user.getAccount()) && password.equals(user.getPassword())) {// å¦‚æœéªŒè¯ç æ­£ç¡®ï¼Œç”¨æˆ·åå’Œå¯†ç ä¹Ÿæ­£ç¡®ï¼Œè·³è½¬åˆ°æ¬¢è¿é¡µï¿½?
+					//Èç¹ûÓÃ»§ÃûÕı??,¾ÍÌø×ªµ½³É¹¦Ò³Ãæ
+					if (account.equals(user.getAccount()) && password.equals(user.getPassword())) {// Èç¹ûÑéÖ¤ÂëÕıÈ·£¬ÓÃ»§ÃûºÍÃÜÂëÒ²ÕıÈ·£¬Ìø×ªµ½»¶Ó­Ò³??
 						hs.setAttribute("account", account);
 						String isAdmin=ac.queryByAccount(account).getIsAdmin();
 						String authCode="";
@@ -122,7 +122,7 @@ public class LoginController{
 					else
 					{
 						request.setAttribute("hiddenCode", "1");
-						request.setAttribute("errorMark", "éªŒè¯ç é”™è¯¯");
+						request.setAttribute("errorMark", "ÑéÖ¤Âë´íÎó");
 						if("fuck".equals(fuck)) {
 							return "forward:/qLogin.jsp";
 						}else {
@@ -133,7 +133,7 @@ public class LoginController{
 				else
 							{
 					request.setAttribute("hiddenCode", "1");
-					request.setAttribute("errorMark", "éªŒè¯ç é”™è¯¯");
+					request.setAttribute("errorMark", "ÑéÖ¤Âë´íÎó");
 					if("fuck".equals(fuck)) {
 						return "forward:/qLogin.jsp";
 					}else {
@@ -143,13 +143,13 @@ public class LoginController{
 			}
 		}
 		
-		//ç¬¬ä¸€æ¬¡è¿›ï¿½?,ä¸éœ€è¦è¿›è¡ŒéªŒè¯ç è®¤è¯
+		//µÚÒ»´Î½ø??,²»ĞèÒª½øĞĞÑéÖ¤ÂëÈÏÖ¤
 		
 	
 	
 	
 	/**
-	 * å¦‚æœè¾“å…¥é”™è¯¯å„ç§åŸå› è·³ä¼šç™»å½•é¡µé¢
+	 * Èç¹ûÊäÈë´íÎó¸÷ÖÖÔ­ÒòÌø»áµÇÂ¼Ò³Ãæ
 	 * 
 	 * @param request
 	 * @param response
