@@ -72,7 +72,7 @@ public class Timer {
     		int cc=rc.queryNumber(wayBillNo);
     		if(cc==b) {
     			ac.setTime(ar.getTime());
-    			ac.setName("�ѵ���Ŀ�ĵ�");
+    			ac.setName("已到达目的地");
     			ac.setHowLong("0");
     			ac.setDistance("0");
     		}else {
@@ -84,7 +84,7 @@ public class Timer {
     		}
     		}
     		 list.add(ac);
-            String parseJSON = JsonUtils.listToJson(list);            
+            String parseJSON = JsonUtils.listToJson(list);
     	response.getWriter().write(parseJSON);
     }
    
