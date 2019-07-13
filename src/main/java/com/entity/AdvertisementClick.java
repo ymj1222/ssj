@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-@Table(name="zj_advertisementClick")
+@Table(name="zj_advertisement_click")
 @Entity
 public class AdvertisementClick{
 
