@@ -7,7 +7,7 @@
 <body>
 	<div id="wrapper">
 		<div class="main">
-			<img src="photo/130.jpg">
+			<img src="photo/1563018647701.jpg">
 		</div>
 	</div>
 	<form action="updatetypeon" method="post">

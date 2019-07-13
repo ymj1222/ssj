@@ -161,9 +161,6 @@ public class ShoppingGuideDao {
 		String sql = "from ShoppingGuide";
 		Query query = entityManager.createQuery(sql);
 		List<ShoppingGuide> list = query.getResultList();
-		for (ShoppingGuide shoppingGuide : list) {
-			System.out.println(shoppingGuide);
-		}
 		return list;
 	};
 
