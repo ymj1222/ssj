@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -47,9 +48,8 @@ public class ShoppingGuideConterllor {
 	private UsersService usersService;
 
 	/**
-	 * ?????????
-	 * 
-	 * @return
+	 * 找到导购添加页面
+ 	 * @return
 	 */
 	@RequestMapping("/findshoppingGuideAdd")
 	public String findadd() {
@@ -57,8 +57,7 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ?????????
-	 * 
+	 * 找到导购列表页面
 	 * @return
 	 */
 	@RequestMapping("/findshoppingGuideList")
@@ -67,16 +66,18 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ???????
-	 * 
+	 * d导购信息添加
 	 * @param shoppingGuide
 	 * @param model
+	 * @param request
+	 * @param file
+	 * @param file1
 	 * @return
-	 * @throws IOException
 	 * @throws IllegalStateException
+	 * @throws IOException
 	 */
 	@RequestMapping(value = "/shoppingGuideAdd", method = RequestMethod.POST)
-	public String add(ShoppingGuide shoppingGuide, Model model, HttpServletRequest request)
+	public String add(ShoppingGuide shoppingGuide, Model model, HttpServletRequest request, @RequestParam("file") MultipartFile file, @RequestParam("file1") MultipartFile file1)
 			throws IllegalStateException, IOException {
 		if (shoppingGuide.getName() != null) {
 			String name = GetNameUtil.getName(request);
@@ -87,49 +88,44 @@ public class ShoppingGuideConterllor {
 			shoppingGuide.setUpdator(name);
 			shoppingGuide.setCreateTime(DateUtils.getCurrentDateTime());
 			shoppingGuide.setUpdateTime(DateUtils.getCurrentDateTime());
-			CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
-					request.getSession().getServletContext());
-			if (multipartResolver.isMultipart(request)) {
-				MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
-				Iterator<?> iter = multiRequest.getFileNames();
-				while (iter.hasNext()) {
-					MultipartFile file = multiRequest.getFile(iter.next().toString());
-					MultipartFile file1 = multiRequest.getFile(iter.next().toString());
-					if (file != null) {
-						String path = ProUtil.getPhotokey() + file.getOriginalFilename();
-						file.transferTo(new File(path));
-						shoppingGuide.setPhoto("photo/" + file.getOriginalFilename());
-						Photo photo = new Photo();
-						photo.setCode(code);
-						photo.setName(shoppingGuide.getName());
-						photo.setUrl("photo/" + file.getOriginalFilename());
-						photo.setCreateTime(DateUtils.getCurrentDateString());
-						photo.setDate(DateUtils.getCurrentDateString());
-						photo.setCreator(name);
-						photo.setUpdator(name);
-						photo.setUpdateTime(DateUtils.getCurrentDateString());
-						photoService.add(photo);
-					}
-					if (file1 != null) {
-						String paths = ProUtil.getPhotokey() + file1.getOriginalFilename();
-						file1.transferTo(new File(paths));
-						shoppingGuide.setWechatTwoDimensionalCode("photo/" + file1.getOriginalFilename());
-						Photo photo = new Photo();
-						long bs1 = System.currentTimeMillis();
-						String code1 = Long.toString(bs1);
-						photo.setCode(code1);
-						photo.setName(shoppingGuide.getName() + "?????");
-						photo.setUrl("photo/" + file1.getOriginalFilename());
-						photo.setDate(DateUtils.getCurrentDateString());
-						photo.setCreateTime(DateUtils.getCurrentDateString());
-						photo.setCreator(name);
-						photo.setUpdator(name);
-						photo.setUpdateTime(DateUtils.getCurrentDateString());
-						photoService.add(photo);
-					}
-				}
+			if(file.getSize()>0){
+				String filen = file.getOriginalFilename();
+				String fileName = System.currentTimeMillis() + "."+filen.substring(filen.lastIndexOf(".")+1);
+				String destFileName = request.getServletContext().getRealPath("") + "photo" + File.separator + fileName;
+				System.out.println(destFileName);
+				shoppingGuide.setPhoto("photo" + File.separator + fileName);
+				File destFile = new File(destFileName);
+				destFile.getParentFile().mkdirs();
+				file.transferTo(destFile);
+				Photo photo = new Photo();
+				photo.setUrl("photo" + File.separator + fileName);
+				photo.setCode(code);
+				photo.setDate(DateUtils.getCurrentDateString());
+				photo.setCreator(GetNameUtil.getName(request));
+				photo.setUpdator(GetNameUtil.getName(request));
+				photo.setCreateTime(DateUtils.getCurrentDateString());
+				photo.setUpdateTime(DateUtils.getCurrentDateString());
+				photoService.add(photo);
 			}
-
+			if(file1.getSize()>0){
+				String filen = file1.getOriginalFilename();
+				String fileName = System.currentTimeMillis() + "."+filen.substring(filen.lastIndexOf(".")+1);
+				String destFileName = request.getServletContext().getRealPath("") + "photo" + File.separator + fileName;
+				System.out.println(destFileName);
+				shoppingGuide.setWechatTwoDimensionalCode("photo" + File.separator + fileName);
+				File destFile = new File(destFileName);
+				destFile.getParentFile().mkdirs();
+				file1.transferTo(destFile);
+				Photo photo = new Photo();
+				photo.setUrl("photo" + File.separator + fileName);
+				photo.setCode(code);
+				photo.setDate(DateUtils.getCurrentDateString());
+				photo.setCreator(GetNameUtil.getName(request));
+				photo.setUpdator(GetNameUtil.getName(request));
+				photo.setCreateTime(DateUtils.getCurrentDateString());
+				photo.setUpdateTime(DateUtils.getCurrentDateString());
+				photoService.add(photo);
+			}
 			shoppingGuideService.add(shoppingGuide);
 			accountController.addDaoGou(shoppingGuide.getName(),shoppingGuide.getCode(), request);
 		}
@@ -137,9 +133,9 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ????id???????
-	 * 
+	 * 根据ID删除数据
 	 * @param id
+	 * @return
 	 */
 	@RequestMapping("/shoppingGuideDelete")
 	public String delete(String id) {
@@ -148,9 +144,10 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ???????????
-	 * 
+	 * 带分页的模糊查询
 	 * @param model
+	 * @param request
+	 * @param response
 	 * @return
 	 * @throws IOException
 	 */
@@ -182,11 +179,11 @@ public class ShoppingGuideConterllor {
 		return page;
 	}
 
-	/**
-	 * ????????????
-	 * 
+
+	 /* *
+	 * 得到要修改的数据
 	 * @param id
-	 * @param model
+	 * @param map
 	 * @return
 	 */
 	@RequestMapping("/shoppingGuideUpdate")
@@ -197,10 +194,9 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ???????
-	 * 
-	 * @param id
+	 * 修改数据
 	 * @param shoppingGuide
+	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/shoppingGuideUpdateSave")
@@ -213,9 +209,9 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ??????????????????????????????
-	 * 
+	 * 忙碌
 	 * @param id
+	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/updatetypebusy")
@@ -228,9 +224,10 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ????????????????????????????????????
-	 * 
+	 * 在线
 	 * @param id
+	 * @param starttime
+	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/updatetypeon")
@@ -244,9 +241,8 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ???????????????????
-	 * 
-	 * @return
+	 * 离线
+	 * @param code
 	 */
 	@RequestMapping("/updatetypeoff")
 	public void updatetypeoff(String code) {
@@ -254,9 +250,10 @@ public class ShoppingGuideConterllor {
 	}
 
 	/**
-	 * ?????????????????????????????????
-	 * 
+	 * 导购服务记录添加
 	 * @param serviceRecord
+	 * @param ShoppingGuideId
+	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/updatetypefuck")
