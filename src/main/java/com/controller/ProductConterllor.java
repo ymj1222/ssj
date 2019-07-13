@@ -73,7 +73,7 @@ public class ProductConterllor {
 				photo.setUpdateTime(DateUtils.getCurrentDateString());
 				photoService.add(photo);
 				// �����ļ�
-				list = saveFile(request, file, list);
+				list = saveFile(request, file, list,fileName);
 			}
 		}
 
@@ -98,12 +98,11 @@ public class ProductConterllor {
 		return "redirect:ToProductList";
 	}
 
-	private List<String> saveFile(HttpServletRequest request, MultipartFile file, List<String> list) {
+	private List<String> saveFile(HttpServletRequest request, MultipartFile file, List<String> list,String fileName) {
 		// �ж��ļ��Ƿ�Ϊ��
 		if (!file.isEmpty()) {
 			try {
-				String filen = file.getOriginalFilename();
-				String fileName = System.currentTimeMillis() + "."+filen.substring(filen.lastIndexOf(".")+1);
+
 				String destFileName = request.getServletContext().getRealPath("") + "photo" + File.separator + fileName;
 				list.add(file.getOriginalFilename());
 				File saveDir = new File(destFileName  );
