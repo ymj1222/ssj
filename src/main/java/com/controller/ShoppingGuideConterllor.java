@@ -1,16 +1,12 @@
 package com.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.entity.Photo;
+import com.entity.ServiceRecord;
+import com.entity.ShoppingGuide;
+import com.service.PhotoService;
+import com.service.ServiceRecordService;
+import com.service.ShoppingGuideService;
+import com.service.UsersService;
 import com.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,16 +16,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import com.entity.Photo;
-import com.entity.ServiceRecord;
-import com.entity.ShoppingGuide;
-import com.service.PhotoService;
-import com.service.ServiceRecordService;
-import com.service.ShoppingGuideService;
-import com.service.UsersService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ShoppingGuideConterllor {
@@ -91,9 +85,9 @@ public class ShoppingGuideConterllor {
 			if(file.getSize()>0){
 				String filen = file.getOriginalFilename();
 				String fileName = System.currentTimeMillis() + "."+filen.substring(filen.lastIndexOf(".")+1);
-				String destFileName = request.getServletContext().getRealPath("") + "photo" + File.separator + fileName;
+				String destFileName = request.getServletContext().getRealPath("") + "photo/" + fileName;
 				System.out.println(destFileName);
-				shoppingGuide.setPhoto("photo" + File.separator + fileName);
+				shoppingGuide.setPhoto("photo/" +fileName);
 				File destFile = new File(destFileName);
 				destFile.getParentFile().mkdirs();
 				file.transferTo(destFile);
@@ -110,9 +104,9 @@ public class ShoppingGuideConterllor {
 			if(file1.getSize()>0){
 				String filen = file1.getOriginalFilename();
 				String fileName = System.currentTimeMillis() + "."+filen.substring(filen.lastIndexOf(".")+1);
-				String destFileName = request.getServletContext().getRealPath("") + "photo" + File.separator + fileName;
+				String destFileName = request.getServletContext().getRealPath("") + "photo/"  + fileName;
 				System.out.println(destFileName);
-				shoppingGuide.setWechatTwoDimensionalCode("photo" + File.separator + fileName);
+				shoppingGuide.setWechatTwoDimensionalCode("photo/"+fileName);
 				File destFile = new File(destFileName);
 				destFile.getParentFile().mkdirs();
 				file1.transferTo(destFile);
