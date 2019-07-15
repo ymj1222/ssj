@@ -28,7 +28,7 @@ public void getName(HttpServletRequest request,HttpServletResponse response) thr
 	String name="";
 	if(null!=ac) {
 		if(as.queryByAccount(ac).getIsAdmin()=="0") {
-			name="����";
+			name="超管";
 		}
 		else {		
 			name=ad.queryByAccount(ac).getName();
