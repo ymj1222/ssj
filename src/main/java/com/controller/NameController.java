@@ -30,7 +30,7 @@ public void getName(HttpServletRequest request,HttpServletResponse response) thr
 		if(as.queryByAccount(ac).getIsAdmin()=="0") {
 			name="超管";
 		}
-		else {		
+		else {
 			name=ad.queryByAccount(ac).getName();
 		}
 		hs.setAttribute("name", name);
