@@ -140,7 +140,6 @@ public class ProductConterllor {
 		page.setList(pages.getContent());
 		page.setPageCount(pages.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
-		System.out.println(pages.getContent());
 		return page;
 	}
 

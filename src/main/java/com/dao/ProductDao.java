@@ -13,8 +13,8 @@ public interface ProductDao extends JpaRepository<Product,Integer>, JpaSpecifica
  Product getProductByCode(Long code);
 
  @Modifying
- @Query("update Product  set name= ?1,price= ?2,type= ?3,brandCode= ?4,size= ?5,sellValue= ?6,marketValue= ?7,color= ?8,induction= ?9,brandName=?11,typeName=?12,agentName=?13 where code= ?10")
- void updateSave(String name, Float price, Long type, Long brandcode, String size, Float sell, Float market, String color, String induction, Long code,String brandn,String typen,String agentn);
+ @Query("update Product  set name= ?1,price= ?2,type= ?3,brandCode= ?4,size= ?5,sellValue= ?6,marketValue= ?7,color= ?8,induction= ?9,agentCode=?11 where code= ?10")
+ void updateSave(String name, Float price, Long type, Long brandcode, String size, Float sell, Float market, String color, String induction, Long code,Long agent);
  @Modifying
  @Query("update Product set auditStatus= ?1 where code= ?2")
  void updateStatus(Integer status, Long code);

@@ -55,15 +55,13 @@ public class ProductService {
 	private ProductTypeDao productTypeDao;
 	@Autowired
 	private PhotoService photoService;
-
+@Autowired
+private AgentService agentService;
 	@Transactional
 	public void insert(Product product) {
 		ProductBrand brand = brandservice.select(Long.valueOf(product.getBrand().getCode()));
 		ProductType type = typeservice.select(Long.valueOf(product.getProducttype().getCode()));
 		Agent agent = agentDao.getById(product.getAgent().getId());
-		product.setBrandName(brand.getName());
-		product.setTypeName(type.getName());
-		product.setAgentName(agent.getName());
 		product.setBrandCode(Long.valueOf(product.getBrand().getCode()));
 		product.setType(Long.valueOf(product.getProducttype().getCode()));
 		product.setAgentCode(Long.valueOf(agent.getCode()));
@@ -98,6 +96,26 @@ public class ProductService {
 			}
 		};
 		page= productDao.findAll(specification,pageable);
+		List<Product>list=page.getContent();
+		 List<Agent> agentlist = agentService.queryagentCode();
+		 for (int i = 0; i < list.size(); i++) {
+		 for (int j = 0; j < agentlist.size(); j++) {
+		 if (list.get(i).getAgentCode() != null) {
+		 if (list.get(i).getAgentCode().toString().equals(agentlist.get(j).getCode()))
+		 {
+		 list.get(i).setAgentName(agentlist.get(j).getName());
+		 }
+		 }
+		 }
+			 if (list.get(i).getType() != null) {
+				 ProductType type = productTypeDao.getByCode(list.get(i).getType());
+				 list.get(i).setTypeName(type.getName());
+			 }
+			 if (list.get(i).getBrandCode() != null) {
+				 ProductBrand brand = brandservice.select(list.get(i).getBrandCode());
+				 list.get(i).setBrandName(brand.getName());
+			 }
+		 }
 		return page;
 	}
 
@@ -121,13 +139,10 @@ public class ProductService {
 		ProductBrand brand = brandservice.select(Long.valueOf(product.getBrand().getName()));
 		ProductType type = typeservice.select(Long.valueOf(product.getProducttype().getName()));
 		Agent agent = agentDao.getById(product.getAgent().getId());
-		product.setBrandName(brand.getName());
-		product.setTypeName(type.getName());
-		product.setAgentName(agent.getName());
 		product.setAgent(agent);
 		product.setBrand(brand);
 		product.setProducttype(type);
-		productDao.updateSave(product.getName(),product.getPrice(),Long.valueOf(product.getProducttype().getCode()),Long.valueOf(product.getBrand().getCode()),product.getSize(),product.getSellValue(),product.getMarketValue(),product.getColor(),product.getInduction(),product.getCode(),product.getBrandName(),product.getTypeName(),product.getAgentName());
+		productDao.updateSave(product.getName(),product.getPrice(),Long.valueOf(product.getProducttype().getCode()),Long.valueOf(product.getBrand().getCode()),product.getSize(),product.getSellValue(),product.getMarketValue(),product.getColor(),product.getInduction(),product.getCode(),Long.valueOf(agent.getCode()));
 		agent.getProduct().add(product);
 		type.getProduct().add(product);
 		brand.getProduct().add(product);
@@ -156,16 +171,24 @@ public class ProductService {
 		};
 		page= productDao.findAll(specification,pageable);
 
-		List<Product> list = page.getContent();
+		List<Product>list=page.getContent();
+		List<Agent> agentlist = agentService.queryagentCode();
 		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getAgent() != null) {
-				list.get(i).setAgentName(list.get(i).getAgent().getName());
+			for (int j = 0; j < agentlist.size(); j++) {
+				if (list.get(i).getAgentCode() != null) {
+					if (list.get(i).getAgentCode().toString().equals(agentlist.get(j).getCode()))
+					{
+						list.get(i).setAgentName(agentlist.get(j).getName());
+					}
+				}
 			}
 			if (list.get(i).getType() != null) {
-				list.get(i).setTypeName(list.get(i).getProducttype().getName());
+				ProductType type = productTypeDao.getByCode(list.get(i).getType());
+				list.get(i).setTypeName(type.getName());
 			}
-			if (list.get(i).getBrand() != null) {
-				list.get(i).setBrandName(list.get(i).getBrand().getName());
+			if (list.get(i).getBrandCode() != null) {
+				ProductBrand brand = brandservice.select(list.get(i).getBrandCode());
+				list.get(i).setBrandName(brand.getName());
 			}
 		}
 		return page;
@@ -251,22 +274,29 @@ public class ProductService {
 					predicate.getExpressions().add(predicate6);
 
 				}
-
 				return predicate;
 			}
 		};
 		page= productDao.findAll(specification,pageable);
 
-		List<Product> list = page.getContent();
+		List<Product>list=page.getContent();
+		List<Agent> agentlist = agentService.queryagentCode();
 		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getAgent() != null) {
-				list.get(i).setAgentName(list.get(i).getAgent().getName());
+			for (int j = 0; j < agentlist.size(); j++) {
+				if (list.get(i).getAgentCode() != null) {
+					if (list.get(i).getAgentCode().toString().equals(agentlist.get(j).getCode()))
+					{
+						list.get(i).setAgentName(agentlist.get(j).getName());
+					}
+				}
 			}
 			if (list.get(i).getType() != null) {
-				list.get(i).setTypeName(list.get(i).getProducttype().getName());
+				ProductType type = productTypeDao.getByCode(list.get(i).getType());
+				list.get(i).setTypeName(type.getName());
 			}
-			if (list.get(i).getBrand() != null) {
-				list.get(i).setBrandName(list.get(i).getBrand().getName());
+			if (list.get(i).getBrandCode() != null) {
+				ProductBrand brand = brandservice.select(list.get(i).getBrandCode());
+				list.get(i).setBrandName(brand.getName());
 			}
 		}
 		return page;
