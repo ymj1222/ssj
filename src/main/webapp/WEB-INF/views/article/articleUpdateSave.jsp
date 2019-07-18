@@ -11,41 +11,12 @@
 <body>
 <script type="text/javascript" src="js/jquery-2.2.4.js"></script>
 <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
-<script type="text/javascript">
-	$(function() {
-		var code = getUrlParam("code");
-		get(code);
-	});
-	function get(code) {
-		$.ajax({
-			type : "POST",
-			url : "../ssj/articleUpdateQuery",
-			dataType : 'JSON',
-			async : false,
-			data : {
-				code : code
-			},
-			success : function(datas) {
-				$("#code").val(datas.code);
-				$("#name").val(datas.name);
-				$("#content").val(datas.content);
-			}
-		});
-	}
-	function getUrlParam(name) {
-		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-		var r = window.location.search.substr(1).match(reg); //匹配目标参数
-		if (r != null)
-			return unescape(r[2]);
-		return null; //返回参数值
-	}
-</script>
 <div id="wrapper">
 	<!-- 头 -->
 	<%@ include file="../../../header.jsp"%>
 	<!-- 菜单 -->
 	<%@ include file="../../../mune.jsp"%>
-	<form action="articleUpdateSave?code=${code}">
+	<form action="articleUpdateSave" method="post">
 
 		<div class="main">
 			<!-- MAIN CONTENT -->
@@ -58,6 +29,22 @@
 								<div class="panel-body">
 									<input type="hidden" name="code" value="${code}"
 										   class="form-control" placeholder="编号">
+									<input type="hidden" name="id" value="${id}"
+										   class="form-control" placeholder="id">
+									<input type="hidden" name="issue" value="${issue}"
+										   class="form-control" placeholder="issue">
+									<input type="hidden" name="createor" value="${createor}"
+										   class="form-control" placeholder="createor">
+									<input type="hidden" name="createTime" value="${createTime}"
+										   class="form-control" placeholder="createTime">
+									<input type="hidden" name="special" value="${special}"
+										   class="form-control" placeholder="special">
+									<input type="hidden" name="specialCode" value="${specialCode}"
+										   class="form-control" placeholder="specialCode">
+									<input type="hidden" name="specialName" value="${specialName}"
+										   class="form-control" placeholder="specialName">
+									<input type="hidden" name="releaseTime" value="${releaseTime}"
+										   class="form-control" placeholder="releaseTime">
 								</div>
 								<div class="panel-body">
 									<span><label>文章名称</label></span>

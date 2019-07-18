@@ -110,7 +110,7 @@ public class Special {
 	public String toString() {
 		return "Special [id=" + id + ", code=" + code + ", name=" + name + ", type=" + type + ", createTime="
 				+ createTime + ", createor=" + createor + ", lastUpdateTime=" + lastUpdateTime + ", lastUpdater="
-				+ lastUpdater + ", article=" + article + "]";
+				+ lastUpdater + "]";
 	};
 
 }

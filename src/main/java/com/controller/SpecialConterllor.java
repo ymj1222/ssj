@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.entity.Special;
 import com.service.SpecialService;
-import com.util.DateUtils;
-import com.util.JsonUtils;
-import com.util.Page;
-import com.util.Pageh;
 
 @Controller
 public class SpecialConterllor {
@@ -44,17 +41,20 @@ public class SpecialConterllor {
 	/**
 	 * �������
 	 * 
-	 * @param ter
+	 * @param
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/specialAdd", method = RequestMethod.POST)
-	public String add(Special special, Model model) {
+	public String add(Special special, Model model, HttpServletRequest request) {
+		String name = GetNameUtil.getName(request);
 		long bs = System.currentTimeMillis();
 		String code = Long.toString(bs);
 		special.setCode(code);
 		special.setCreateTime(DateUtils.getCurrentDateString());
+		special.setCreateor(name);
 		special.setLastUpdateTime(DateUtils.getCurrentDateString());
+		special.setLastUpdater(name);
 		specialService.add(special);
 		return "forward:/WEB-INF/views/special/specialList.jsp";
 	}
@@ -62,7 +62,7 @@ public class SpecialConterllor {
 	/**
 	 * ����idɾ������
 	 * 
-	 * @param id
+	 * @param
 	 */
 	@RequestMapping(value = "/specialDelete/{code}", method = RequestMethod.DELETE)
 	public String delete(@PathVariable("code") String code) {
@@ -90,29 +90,14 @@ public class SpecialConterllor {
 		if (null == pageSize || "".equals(pageNow.trim())) {
 			pageSize = page.getPageSize() + "";
 		}
-		int pageCount = 0;
 		Pageh pages = new Pageh();
 		pages.setPageNow(Integer.parseInt(pageNow));
 		pages.setPageSize(Integer.parseInt(pageSize));
-		pages.setObject1(sname);
-		pageCount = specialService.gettotal(Integer.parseInt(pageSize), sname);
-		List<Special> list = specialService.select(pages);
-		/*for (int i = 0; i < list.size(); i++) {
-			if(list.get(i).getType().equals("1")) {
-				list.get(i).setType("������");
-			}else if(list.get(i).getType().equals("2")) {
-				list.get(i).setType("��װ��");
-			}else if(list.get(i).getType().equals("3")) {
-				list.get(i).setType("�Ҿ���");
-			}else if(list.get(i).getType().equals("4")) {
-				list.get(i).setType("�����");
-			}else if(list.get(i).getType().equals("5")) {
-				list.get(i).setType("ʳƷ��");
-			}
-		}*/
+		pages.setObject1(SearchTool.decodeSpecialCharsWhenLikeUseSlash(sname));
+		org.springframework.data.domain.Page<Special>page1 = specialService.select(pages);
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
-		page.setPageCount(pageCount);
+		page.setList(page1.getContent());
+		page.setPageCount(page1.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
 		return page;
 	}
@@ -125,7 +110,7 @@ public class SpecialConterllor {
 	/**
 	 * �õ�Ҫ�޸ĵ�����
 	 * 
-	 * @param id
+	 * @param
 	 * @param model
 	 * @return
 	 */
@@ -135,18 +120,24 @@ public class SpecialConterllor {
 		model.addAttribute("code", special.getCode());
 		model.addAttribute("name", special.getName());
 		model.addAttribute("type", special.getType());
+		model.addAttribute("id", special.getId());
+		model.addAttribute("createTime", special.getCreateTime());
+		model.addAttribute("createor", special.getCreateor());
 		return "forward:/WEB-INF/views/special/specialUpdateSave.jsp";
 	}
 
 	/**
 	 * �޸�����
 	 * 
-	 * @param id
-	 * @param order
+	 * @param
+	 * @param
 	 * @return
 	 */
 	@RequestMapping("/specialUpdateSave")
-	public String updateSave(Special special) {
+	public String updateSave(Special special, HttpServletRequest request) {
+		String name = GetNameUtil.getName(request);
+		special.setLastUpdater(name);
+		special.setLastUpdateTime(DateUtils.getCurrentDateString());
 		specialService.update(special);
 		return "redirect:findSpecialList";
 	}

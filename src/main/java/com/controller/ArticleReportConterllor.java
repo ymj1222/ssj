@@ -86,27 +86,15 @@ public class ArticleReportConterllor {
 		if (null == pageSize || "".equals(pageNow.trim())) {
 			pageSize = page.getPageSize() + "";
 		}
-		int pageCount = 0;
 		Pageh pages = new Pageh();
 		pages.setPageNow(Integer.parseInt(pageNow));
 		pages.setPageSize(Integer.parseInt(pageSize));
 		pages.setObject1(sname);
-		pageCount = as.gettotal(pages);
-		List<ArticleReport> list = as.select(pages);
-		/*for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getType().equals("8001")) {
-				list.get(i).setType("ɫ��/����");
-			} else if (list.get(i).getType().equals("8002")) {
-				list.get(i).setType("���ݲ���");
-			} else if (list.get(i).getType().equals("8003")) {
-				list.get(i).setType("�������");
-			} else if (list.get(i).getType().equals("8004")) {
-				list.get(i).setType("���������������ļ�ֵ��");
-			}
-		}*/
+		org.springframework.data.domain.Page<ArticleReport>page1 = as.select(pages);
+
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
-		page.setPageCount(pageCount);
+		page.setList(page1.getContent());
+		page.setPageCount(page1.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
 		return page;
 	}

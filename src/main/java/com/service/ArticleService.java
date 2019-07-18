@@ -2,22 +2,32 @@ package com.service;
 
 import java.util.List;
 
+import com.dao.ArticleDao;
+import com.dao.SpecialDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.dao.ArticleDao;
 import com.entity.Article;
 import com.entity.Special;
 import com.util.Pageh;
 
 @Service
 public class ArticleService {
-	@Autowired
-	private ArticleDao articleDao;
 
+
+	@Autowired
+	private ArticleDao articleDa;
+
+
+	@Autowired
+	private SpecialDao specialDao;
 	
 	public void add(Article article) {
-		articleDao.add(article);
+		articleDa.save(article);
 	}
 
 	/**
@@ -26,77 +36,67 @@ public class ArticleService {
 	 * @param id
 	 */
 	public void delete(String id) {
-		articleDao.delete(id);
+		articleDa.delete(articleDa.getByCode(id));
 	}
 
 	/**
 	 * 得到所有数据
-	 * 
+	 *
 	 * @return
 	 */
-	public List<Article> select(Pageh page) {
-		int pageNow = (page.getPageNow()-1)*page.getPageSize();
-		page.setPageNow(pageNow);
-		List<Article> list = articleDao.select(page);
-		return list;
-	}
-
-	/**
-	 * 得到数据总页数
-	 */
-	public Integer gettotal(Pageh pages) {
-		int pageCount = 0;
-		int rowCount = articleDao.gettotal(pages.getObject1());
-		if ((rowCount % pages.getPageSize()) == 0) {
-			pageCount = rowCount / pages.getPageSize();
-		} else {
-			pageCount = rowCount / pages.getPageSize() + 1;
+	public Page<Article >select(Pageh pageh) {
+		if(pageh.getObject1()!=null){
+			Pageable pageable =  PageRequest.of(pageh.getPageNow()-1, pageh.getPageSize());
+			org.springframework.data.domain.Page<Article> page=articleDa.getByNameContainingOrderByIdDesc(pageh.getObject1(),pageable);
+			return page;
+		}else {
+			Pageable pageable =  PageRequest.of(pageh.getPageNow(), pageh.getPageSize(),new Sort(Sort.Direction.DESC,"id"));
+			Page<Article> page=articleDa.findAll(pageable);
+			return page;
 		}
-		return pageCount;
 	}
 
-	/**
-	 * 得到要修改的数据
-	 * 
-	 * @param id
-	 * @return
-	 */
+
+
 	public Article updatequery(String code) {
-		Article article = articleDao.updatequery(code);
+		Article article = articleDa.getByCode(code);
 		return article;
 	}
-	/**
-	 * 查所有发布数据
-	 * @param code
-	 * @return
-	 */
+
 	public Article selectIs(int is) {
-		Article article = articleDao.selectIs(is);
-		return article;
+		List<Article>article= articleDa.getByIssue(is);
+		if(article.size()>0){
+			return article.get(0);
+		}
+		return null;
 	}
 	public Article articleReport(String code) {
-		Article article = articleDao.articleReport(code);
+		Article article = articleDa.getByCode(code);
 		return article;
 	}
 
 	/**
 	 * 修改数据
 	 * 
-	 * @param id
-	 * @param meetroom
+	 * @param
+	 * @param
 	 */
 	public void update(Article article) {
-		articleDao.updateSave(article);
+		articleDa.save(article);
 	}
 	public void updateIs(int article,String code) {
-		articleDao.updateIs(article,code);
+		Article article1 =articleDa.getByCode(code);
+		if(article1!=null){
+			article1.setIssue(article);
+			articleDa.save(article1);
+		}
 	}
 	/**
 	 * 找专题名
 	 * 
-	 * @param id
+	 * @param
 	 */
 	public List<Special> specialName(){
-	return articleDao.selectName();
+	return specialDao.findAll();
 	}
 }

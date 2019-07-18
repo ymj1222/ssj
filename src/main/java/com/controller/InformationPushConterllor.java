@@ -1,6 +1,7 @@
 package com.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +47,7 @@ public class InformationPushConterllor {
 	 * �������
 	 * 
 	 * @param informationPush
-	 * @param model
+	 * @param
 	 * @return
 	 */
 	@RequestMapping(value = "/informationPushAdd", method = RequestMethod.POST)
@@ -82,16 +83,14 @@ public class InformationPushConterllor {
 		if (null == pageSize || "".equals(pageNow.trim())) {
 			pageSize = page.getPageSize() + "";
 		}
-		Integer pageCount = 0;
-		pageh.setPageNow((Integer.parseInt(pageNow) - 1) * Integer.parseInt(pageSize));
+		pageh.setPageNow(Integer.parseInt(pageNow));
 		pageh.setPageSize(Integer.parseInt(pageSize));
 //		phone.replaceAll("_", "\\\\_");
 		pageh.setPhone(SearchTool.decodeSpecialCharsWhenLikeUseSlash(phone));
-		pageCount = informationPushService.gettotal(pageh);
-		List<InformationPush> list = informationPushService.select(pageh);
+		org.springframework.data.domain.Page<InformationPush> pushPage= informationPushService.select(pageh);
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
-		page.setPageCount(pageCount);
+		page.setList(pushPage.getContent());
+		page.setPageCount(pushPage.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
 		String parseJSON = JsonUtils.beanToJson(page);
 		response.getWriter().write(parseJSON);

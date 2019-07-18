@@ -1,11 +1,14 @@
 package com.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.entity.Terminal;
+import com.service.TerminalService;
 import com.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +24,8 @@ import com.service.AgentService;
 public class AgentConterllor {
 	@Autowired
 	private AgentService agentService;
-
+	@Autowired
+	private TerminalService terminalService;
 	/**
 	 * �ҵ����°��ն˵�ҳ��
 	 * 
@@ -107,15 +111,26 @@ public class AgentConterllor {
 		if (null == pageSize || "".equals(pageNow.trim())) {
 			pageSize = page.getPageSize() + "";
 		}
-		Integer pageCount = 0;
-		pageh.setPageNow((Integer.parseInt(pageNow) - 1) * Integer.parseInt(pageSize));
+		pageh.setPageNow(Integer.parseInt(pageNow));
 		pageh.setPageSize(Integer.parseInt(pageSize));
 		pageh.setObject1(SearchTool.decodeSpecialCharsWhenLikeUseSlash(name));
-		pageCount = agentService.gettotal(pageh);
-
-		page.setPageCount(pageCount);
+		org.springframework.data.domain.Page<Agent> page1 = agentService.select(pageh);
+		List<Terminal> terminallist = terminalService.queryCode();
+		List<Agent> list = page1.getContent();
+		for (int i = 0; i < list.size(); i++) {
+			for (int j = 0; j < terminallist.size(); j++) {
+				if (list.get(i).getTerminalCode() != null) {
+					if (terminallist.get(j).getCode() != null && !terminallist.get(j).getCode().equals("")) {
+						if (list.get(i).getTerminalCode().equals(terminallist.get(j).getCode())) {
+							list.get(i).setTerminalCode(terminallist.get(j).getName());
+						}
+					}
+				}
+			}
+		}
+		page.setPageCount(page1.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
-		page.setList(agentService.select(pageh));
+		page.setList(list);
 		return page;
 	}
 

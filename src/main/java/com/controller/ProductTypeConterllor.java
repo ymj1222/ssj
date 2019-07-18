@@ -1,25 +1,22 @@
 package com.controller;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.entity.ProductType;
 import com.service.ProductTypeService;
+import com.util.CodeUtil;
+import com.util.DateUtils;
+import com.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.entity.ProductType;
-import com.util.CodeUtil;
-import com.util.DateUtils;
-import com.util.JsonUtils;
-import com.util.Page;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Controller()
 public class ProductTypeConterllor {
@@ -77,22 +74,22 @@ public class ProductTypeConterllor {
 @ResponseBody
 	@RequestMapping("/ProductTypeselect")
 	public Page select(Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
 		Page page = new Page();
 		String pageNow = request.getParameter("pageNow");
 		String pageSize = request.getParameter("pageSize");
 		String name = request.getParameter("name");
-		if (null == pageNow || "".equals(pageNow.trim())) {
-			pageNow = "1";
-		}
-		if (null == pageSize || "".equals(pageNow.trim())) {
-			pageSize = page.getPageSize() + "";
-		}
-		int pageCount = 0;
-		pageCount = productTypeService.gettotal(name.replaceAll("_", "\\\\_"), Integer.parseInt(pageSize));
-		List<ProductType> list = productTypeService.select(name.replaceAll("_", "\\\\_"), Integer.parseInt(pageNow), Integer.parseInt(pageSize));
+	if (null == pageNow || "".equals(pageNow.trim())) {
+		pageNow = "1";
+	}
+	if (null == pageSize || "".equals(pageNow.trim())) {
+		pageSize = page.getPageSize() + "";
+	}
+	org.springframework.data.domain.Page<ProductType> pages=productTypeService.select(name,Integer.parseInt(pageNow), Integer.parseInt(pageSize));
+		List<ProductType> list = pages.getContent();
 		response.setCharacterEncoding("utf-8");
 		page.setList(list);
-		page.setPageCount(pageCount);
+		page.setPageCount(pages.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
 		return page;
 	}

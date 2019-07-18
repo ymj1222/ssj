@@ -1,6 +1,7 @@
-package com.controll;
+package com.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Date;
 import java.util.List;
 
@@ -9,6 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -96,7 +100,7 @@ public class OrdersConterllor {
 	/**
 	 * 数据添加
 	 *
-	 * @param ter
+	 * @param orders
 	 * @param model
 	 * @return
 	 */
@@ -125,12 +129,13 @@ public class OrdersConterllor {
 	/**
 	 * 添加订单
 	 *
-	 * @param ter
+	 * @param orders
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/myordersAdd", method = RequestMethod.POST)
 	public String myOrdersadd(Orders orders, Model model, HttpServletRequest request) {
+        try {
 		HttpSession hs = request.getSession();
 		String account = (String) hs.getAttribute("account");
 		String usersCode=us.queryByAccount(account);
@@ -145,8 +150,13 @@ public class OrdersConterllor {
 		orders.setIsOutOfStock("0");
 		orders.setIsconfirmreceipt(0);
 		orders.setOrderState(1);
-		orders.setReceivingTime("未收货");
+		String n = "未收";
+            n = new String(n.getBytes("gbk"),"utf-8");
+        orders.setReceivingTime(n);
 		orderService.add(orders);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 		return "redirect:myOrders";
 	}
 
@@ -159,39 +169,31 @@ public class OrdersConterllor {
 	 */
 	@ResponseBody
 	@RequestMapping("/ordersSelect")
-	public Page select(Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void select(Model model, HttpServletRequest request, HttpServletResponse response,String pageNow,String pageSize) throws IOException {
 		Page page = new Page();
 		HttpSession hs = request.getSession();
 		String account = (String) hs.getAttribute("account");
 		String usersCode=us.queryByAccount(account);
 		String sname = request.getParameter("sname");
 		String isOutOfStock=request.getParameter("isOutOfStock");
-		System.out.println(isOutOfStock+"....");
-		String pageNow = request.getParameter("pageNow");
-		String pageSize = request.getParameter("pageSize");
-		if (null == pageNow || "".equals(pageNow.trim())) {
-			pageNow = "1";
-		}
-		if (null == pageSize || "".equals(pageNow.trim())) {
-			pageSize = page.getPageSize() + "";
-		}
-		int pageCount = 0;
-		Pageh pages = new Pageh();
-		pages.setPageNow(Integer.parseInt(pageNow));
-		pages.setPageSize(Integer.parseInt(pageSize));
-		pages.setObject1(sname);
-		pages.setObject2(usersCode);
-		pages.setObject3(isOutOfStock);
-		pageCount = orderService.gettotal(Integer.parseInt(pageSize), sname,usersCode,isOutOfStock);
-		List<Orders> list = orderService.select(pages);
-		response.setCharacterEncoding("utf-8");
-		page.setPageCount(pageCount);
-		page.setList(list);
+        if (null == pageNow || "".equals(pageNow.trim())) {
+            pageNow = "1";
+        }
+        if (null == pageSize || "".equals(pageNow.trim())) {
+            pageSize = "3";
+        }
+        int pageNow1=Integer.parseInt(pageNow)-1;
+        Pageable pageable= PageRequest.of(pageNow1,Integer.parseInt(pageSize), Sort.by(Sort.Direction.DESC, "id"));
+        org.springframework.data.domain.Page<Orders> list=orderService.queryAll(sname,usersCode,isOutOfStock,pageable);
+        List<Orders> l= list.getContent();
+		page.setPageCount(list.getTotalPages());
+		page.setList(l);
+        response.setCharacterEncoding("utf-8");
 		page.setPageNow(Integer.parseInt(pageNow));
-		return page;/*
-		 * String parseJSON = JsonUtils.beanToJson(page);
-		 * response.getWriter().write(parseJSON);
-		 */
+
+		String parseJSON = JsonUtils.beanToJson(page);
+		response.getWriter().write(parseJSON);
+
 	}
 
 	@RequestMapping(value = "/finOrdersUpdate")
@@ -203,7 +205,7 @@ public class OrdersConterllor {
 	/**
 	 * 得到要修改的数据
 	 *
-	 * @param id
+	 * @param code
 	 * @param model
 	 * @return
 	 */
@@ -246,8 +248,7 @@ public class OrdersConterllor {
 	/**
 	 * 修改数据
 	 *
-	 * @param id
-	 * @param order
+	 * @param orders
 	 * @return
 	 */
 	@RequestMapping(value = "/ordersUpdateSave")
@@ -279,7 +280,7 @@ public class OrdersConterllor {
 	 * 发货
 	 *
 	 * @param code
-	 * @param order
+	 * @param orders
 	 * @return
 	 */
 	@RequestMapping("/ordersOut")
@@ -301,8 +302,8 @@ public class OrdersConterllor {
 	/**
 	 * 评价
 	 *
-	 * @param code
-	 * @param order
+	 * @param productCode
+	 * @param m
 	 * @return
 	 */
 	@RequestMapping("/ordersOutPj")
@@ -315,7 +316,7 @@ public class OrdersConterllor {
 	 * 收货
 	 *
 	 * @param code
-	 * @param order
+	 * @param orders
 	 * @return
 	 */
 	@RequestMapping("/findOrderList")
@@ -335,7 +336,7 @@ public class OrdersConterllor {
 	 * 我的订单收货
 	 *
 	 * @param code
-	 * @param order
+	 * @param orders
 	 * @return
 	 */
 	@RequestMapping("/myOrdersfind")

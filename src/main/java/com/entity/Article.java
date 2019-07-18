@@ -127,7 +127,7 @@ public String toString() {
 	return "Article [id=" + id + ", code=" + code + ", name=" + name + ", content=" + content + ", releaseTime="
 			+ releaseTime + ", specialCode=" + specialCode + ", specialName=" + specialName + ", issue=" + issue
 			+ ", createTime=" + createTime + ", createor=" + createor + ", lastUpdateTime=" + lastUpdateTime
-			+ ", lastUpdater=" + lastUpdater + ", special=" + special + ", articleReport=" + articleReport + "]";
+			+ ", lastUpdater=" + lastUpdater + ", articleReport=" + articleReport + "]";
 }
 
 

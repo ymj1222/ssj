@@ -27,6 +27,18 @@
 								<div class="panel">
 									<form:input type="hidden" name="id" path="id"
 										class="form-control" placeholder="id" />
+									<form:input type="hidden" name="code" path="code"
+												class="form-control" placeholder="code" />
+
+									<form:input type="hidden" name="creator" path="creator"
+												class="form-control" placeholder="creator" />
+
+									<form:input type="hidden" name="createTime" path="createTime"
+												class="form-control" placeholder="createTime" />
+									<form:input type="hidden" name="terminalCode" path="terminalCode"
+												class="form-control" placeholder="terminalCode" />
+									<form:input type="hidden" name="terminal" path="terminal"
+												class="form-control" placeholder="terminal" />
 									<div class="panel-body">
 										名称:
 										<form:input type="text" name="name" path="name"
