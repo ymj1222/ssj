@@ -1,20 +1,15 @@
 package com.controller;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.entity.ProductEvaluation;
 import com.service.ProductEvaluationService;
 import com.util.Page;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller()
 public class ProductEvaluationConterllor {
@@ -39,8 +34,7 @@ public class ProductEvaluationConterllor {
 
 	@ResponseBody
 	@RequestMapping("/ProductEvaluationSelect")
-	public Page ProductEvaluationSelect(Model model, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public Page ProductEvaluationSelect(HttpServletRequest request, HttpServletResponse response){
 		Page page = new Page();
 		String pageNow = request.getParameter("pageNow");
 		String pageSize = request.getParameter("pageSize");
@@ -51,12 +45,13 @@ public class ProductEvaluationConterllor {
 		if (null == pageSize || "".equals(pageNow.trim())) {
 			pageSize = page.getPageSize() + "";
 		}
-		int pageCount = 0;
-		pageCount = productEvaluationService.gettotal(Long.valueOf(code), Integer.parseInt(pageSize));
-		List<ProductEvaluation> list = productEvaluationService.select(Long.valueOf(code), Integer.parseInt(pageNow), Integer.parseInt(pageSize));
+		if(null == code|| "".equals(code.trim())){
+			code="0";
+		}
+		org.springframework.data.domain.Page<ProductEvaluation>pages=productEvaluationService.select(Long.valueOf(code),Integer.parseInt(pageNow),Integer.parseInt(pageSize));
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
-		page.setPageCount(pageCount);
+		page.setList(pages.getContent());
+		page.setPageCount(pages.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
 		return page;
 	}

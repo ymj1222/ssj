@@ -1,16 +1,14 @@
 package com.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.entity.Agent;
+import com.entity.Photo;
+import com.entity.Product;
+import com.service.AgentService;
+import com.service.PhotoService;
+import com.service.ProductService;
+import com.util.CodeUtil;
+import com.util.DateUtils;
+import com.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,19 +17,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.entity.Agent;
-import com.entity.Photo;
-import com.entity.Product;
-import com.entity.ProductBrand;
-import com.entity.ProductType;
-import com.service.AgentService;
-import com.service.PhotoService;
-import com.service.ProductService;
-import com.util.CodeUtil;
-import com.util.DateUtils;
-import com.util.JsonUtils;
-import com.util.Page;
-import com.util.ProUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 public class ProductConterllor {
@@ -145,13 +139,10 @@ public class ProductConterllor {
 		if (null == pageSize || "".equals(pageNow.trim())) {
 			pageSize = page.getPageSize() + "";
 		}
-		int pageCount = 0;
-		pageCount = productService.selectproductlistcount(name.replaceAll("_", "\\\\_"), Integer.valueOf(pageSize));
-		List<Product> list = productService.selectproductlist(name.replaceAll("_", "\\\\_"), Integer.valueOf(pageNow),
-				Integer.valueOf(pageSize));
+		org.springframework.data.domain.Page<Product>pages=productService.selectproductlist(name,Integer.parseInt(pageNow),Integer.parseInt(pageSize));
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
-		page.setPageCount(pageCount);
+		page.setList(pages.getContent());
+		page.setPageCount(pages.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
 		return page;
 	}
@@ -215,26 +206,24 @@ public class ProductConterllor {
 		if (null == pageSize || "".equals(pageNow.trim())) {
 			pageSize = page.getPageSize() + "";
 		}
-		int pageCount = 0;
-		pageCount = productService.querystatuscount(Integer.valueOf(status), Integer.valueOf(pageSize));
-		List<Product> list = productService.querystatus(Integer.valueOf(status), Integer.valueOf(pageNow),
-				Integer.valueOf(pageSize));
+		org.springframework.data.domain.Page<Product>pages=productService.querystatus(Integer.valueOf(status),Integer.parseInt(pageNow),Integer.parseInt(pageSize));
+
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
-		page.setPageCount(pageCount);
+		page.setList(pages.getContent());
+		page.setPageCount(pages.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
 		return page;
 	}
 
 	@RequestMapping("/productModifyStatus")
 	public String productModifyStatus(String status, String code) {
-		productService.updateStatus(Long.valueOf(status), Long.valueOf(code));
+		productService.updateStatus(Integer.valueOf(status), Long.valueOf(code));
 		return "redirect:ToproductselectStatus";
 	}
 
 	@RequestMapping("/productModifyRecover")
 	public String productModifyRecover(String status, String code) {
-		productService.updateStatus(Long.valueOf(status), Long.valueOf(code));
+		productService.updateStatus(Integer.valueOf(status), Long.valueOf(code));
 		return "redirect:Toproductselectrecover";
 	}
 
@@ -281,12 +270,10 @@ public class ProductConterllor {
 			pageSize = page.getPageSize() + "";
 		}
 		int pageCount = 0;
-
-		pageCount = productService.bothtotal(product, Integer.valueOf(pageSize));
-		List<Product> list = productService.both(product, Integer.valueOf(pageNow), Integer.valueOf(pageSize));
+org.springframework.data.domain.Page<Product>pages=productService.both(product, Integer.valueOf(pageNow), Integer.valueOf(pageSize));
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
-		page.setPageCount(pageCount);
+		page.setList(pages.getContent());
+		page.setPageCount(pages.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
 		return page;
 	}

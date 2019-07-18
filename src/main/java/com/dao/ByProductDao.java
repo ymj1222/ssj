@@ -1,24 +1,9 @@
 package com.dao;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.springframework.stereotype.Repository;
 
 import com.entity.ByProduct;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public class ByProductDao {
-	@PersistenceContext
-	private EntityManager entityManager;
+public interface ByProductDao extends JpaRepository<ByProduct,Integer>{
 
-	/**
-	 * 添加
-	 * 
-	 * @param 每個商品的分數
-	 */
-	public void insert(ByProduct byProduct) {
-		entityManager.persist(byProduct);
-	}
-
-}
+		}

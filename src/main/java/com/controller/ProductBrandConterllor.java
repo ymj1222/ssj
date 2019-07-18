@@ -1,25 +1,22 @@
 package com.controller;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.entity.ProductBrand;
+import com.service.ProductBrandService;
+import com.util.CodeUtil;
+import com.util.DateUtils;
+import com.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.entity.ProductBrand;
-import com.service.ProductBrandService;
-import com.util.CodeUtil;
-import com.util.DateUtils;
-import com.util.JsonUtils;
-import com.util.Page;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 public class ProductBrandConterllor {
@@ -87,12 +84,10 @@ public class ProductBrandConterllor {
 		if (null == pageSize || "".equals(pageNow.trim())) {
 			pageSize = page.getPageSize() + "";
 		}
-		int pageCount = 0;
-		pageCount = productBrandService.gettotal(name.replaceAll("_", "\\\\_"), Integer.valueOf(pageSize));
-		List<ProductBrand> list = productBrandService.select(name.replaceAll("_", "\\\\_"), Integer.valueOf(pageNow), Integer.valueOf(pageSize));
+		org.springframework.data.domain.Page<ProductBrand> pages=productBrandService.select(name,Integer.parseInt(pageNow), Integer.parseInt(pageSize));
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
-		page.setPageCount(pageCount);
+		page.setList(pages.getContent());
+		page.setPageCount(pages.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
 		return page;
 	}

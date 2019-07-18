@@ -2,10 +2,15 @@ package com.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +29,11 @@ import com.entity.ProductType;
 import com.entity.Warehouse;
 import com.entity.WarehousingAndOut;
 import com.util.DateUtils;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 @Service
 public class ProductService {
@@ -57,7 +67,7 @@ public class ProductService {
 		product.setAgent(agent);
 		product.setBrand(brand);
 		product.setProducttype(type);
-		productDao.insert(product);
+		productDao.save(product);
 		agent.getProduct().add(product);
 		type.getProduct().add(product);
 		brand.getProduct().add(product);
@@ -68,33 +78,29 @@ public class ProductService {
 	 * @param page
 	 * @return 商品編緝的數據
 	 */
-	public List<Product> selectproductlist(String name, int PageNow, int PageSize) {
-		int now = (PageNow - 1) * PageSize;
-		List<Product> list = productDao.selectproductlist(name, now, PageSize);
-		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getAgent() != null) {
-				list.get(i).setAgentName(list.get(i).getAgent().getName());
+	public Page<Product> selectproductlist(String name, int pageNow, int pageSize) {
+		Page<Product> page;
+		Sort sort = new Sort(Sort.Direction.DESC, "code");
+		PageRequest pageable =PageRequest.of(pageNow-1, pageSize, sort);
+		Specification<Product> specification = new Specification<Product>() {
+			@Override
+			public Predicate toPredicate(Root<Product> root,
+										 CriteriaQuery<?> query, CriteriaBuilder cb) {
+				if(name !=null && name !="") {
+					Predicate predicate = cb.like(root.get("name").as(String.class),"%"+name+"%");
+					query.where(root.get("auditStatus").as(Integer.class).in(1,2),predicate);
+
+					return null;
+				}
+				query.where(root.get("auditStatus").as(Integer.class).in(1,2));
+
+				return null;
 			}
-			if (list.get(i).getType() != null) {
-				list.get(i).setTypeName(list.get(i).getProducttype().getName());
-			}
-			if (list.get(i).getBrand() != null) {
-				list.get(i).setBrandName(list.get(i).getBrand().getName());
-			}
-		}
-		return list;
+		};
+		page= productDao.findAll(specification,pageable);
+		return page;
 	}
 
-	public Integer selectproductlistcount(String name, int size) {
-		int pageCount = 0;
-		int rowCount = productDao.selectproductlistcount(name).intValue();
-		if ((rowCount % size) == 0) {
-			pageCount = rowCount / size;
-		} else {
-			pageCount = rowCount / size + 1;
-		}
-		return pageCount;
-	}
 
 	/**
 	 * 
@@ -102,7 +108,7 @@ public class ProductService {
 	 * @return 回顯
 	 */
 	public Product updatequery(Long code) {
-		return productDao.updatequery(code);
+		return productDao.getProductByCode(code);
 	}
 
 	/**
@@ -117,11 +123,8 @@ public class ProductService {
 		Agent agent = agentDao.find(product.getAgent().getId());
 		product.setAgent(agent);
 		product.setBrand(brand);
-		product.setAgentCode(Long.valueOf(agent.getCode()));
 		product.setProducttype(type);
-		product.setBrandCode(Long.valueOf(product.getBrand().getCode()));
-		product.setType(Long.valueOf(product.getProducttype().getCode()));
-		productDao.updateSave(product);
+		productDao.updateSave(product.getName(),product.getPrice(),Long.valueOf(product.getProducttype().getCode()),Long.valueOf(product.getBrand().getCode()),product.getSize(),product.getSellValue(),product.getMarketValue(),product.getColor(),product.getInduction(),product.getCode());
 		agent.getProduct().add(product);
 		type.getProduct().add(product);
 		brand.getProduct().add(product);
@@ -134,9 +137,23 @@ public class ProductService {
 	 * @param pageSize
 	 * @return 審批狀態
 	 */
-	public List<Product> querystatus(int status, int pageNow, int pageSize) {
-		int now = (pageNow - 1) * pageSize;
-		List<Product> list = productDao.querystatus(status, now, pageSize);
+	public Page<Product> querystatus(int status, int pageNow, int pageSize) {
+		Page<Product> page;
+		Sort sort = new Sort(Sort.Direction.DESC, "code");
+		PageRequest pageable =PageRequest.of(pageNow-1, pageSize, sort);
+		Specification<Product> specification = new Specification<Product>() {
+			@Override
+			public Predicate toPredicate(Root<Product> root,
+										 CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate predicate = cb.equal(root.get("auditStatus").as(Integer.class),status);
+				query.where(predicate);
+				return null;
+
+			}
+		};
+		page= productDao.findAll(specification,pageable);
+
+		List<Product> list = page.getContent();
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getAgent() != null) {
 				list.get(i).setAgentName(list.get(i).getAgent().getName());
@@ -148,26 +165,17 @@ public class ProductService {
 				list.get(i).setBrandName(list.get(i).getBrand().getName());
 			}
 		}
-		return list;
+		return page;
 	}
 
-	public Integer querystatuscount(int status, int size) {
-		int pageCount = 0;
-		int rowCount = productDao.querystatuscount(status).intValue();
-		if ((rowCount % size) == 0) {
-			pageCount = rowCount / size;
-		} else {
-			pageCount = rowCount / size + 1;
-		}
-		return pageCount;
-	}
+
 
 	@Transactional
-	public void updateStatus(long status, long code) {
+	public void updateStatus(Integer status, long code) {
 		productDao.updateStatus(status, code);
 		if (status == 3) {
 			ByProduct byProduct = new ByProduct();
-			Product product = productDao.updatequery(code);
+			Product product = productDao.getProductByCode(code);
 			WarehousingAndOut WAO = new WarehousingAndOut();
 			Warehouse warehouse = new Warehouse();
 			WAO.setType(2);
@@ -188,26 +196,65 @@ public class ProductService {
 				byProduct.setIntegral(product.getSellValue() / 95);
 				byProduct.setGoldCoin(product.getSellValue() / 95);
 				byProduct.setCreateTime(date);
-				productDao.updateShelftime(product);
+				productDao.updateShelftime(product.getShelftime(),product.getIsEffective(),product.getCode());
 				byProduct.setProduct(product);
-				byproductDao.insert(byProduct);
+				byproductDao.save(byProduct);
 				warehouse.getWao().add(WAO);
 				warehouse.setProduct(product);
-				WarehouseDao.insert(warehouse);
+				WarehouseDao.save(warehouse);
 				product.setWarehouse(warehouse);
 				product.getWao().add(WAO);
 				WAO.setProduct(product);
 				WAO.setWarehouse(warehouse);
-				WarehousingAndOutDao.insert(WAO);
+				WarehousingAndOutDao.save(WAO);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public List<Product> both(Product product, int pageNow, int pageSize) {
-		int now = (pageNow - 1) * pageSize;
-		List<Product> list = productDao.both(product, now, pageSize);
+	public Page<Product> both(Product product, int pageNow, int pageSize) {
+		Page<Product> page;
+		Sort sort = new Sort(Sort.Direction.DESC, "code");
+		PageRequest pageable =PageRequest.of(pageNow-1, pageSize, sort);
+		Specification<Product> specification = new Specification<Product>() {
+			@Override
+			public Predicate toPredicate(Root<Product> root,
+										 CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				Predicate predicate = cb.conjunction();
+				if (product.getName() != null && product.getName() != "") {
+					Predicate predicate1 = cb.like(root.get("name"),"%"+product.getName()+"%");
+					predicate.getExpressions().add(predicate1);				}
+				if (product.getCode() != null && product.getCode() != 0) {
+					Predicate predicate2 = cb.equal(root.get("code"),product.getCode());
+					predicate.getExpressions().add(predicate2);
+				}
+				if (product.getType() != null && product.getType() != 0) {
+					Predicate predicate3 = cb.equal(root.get("type"),product.getType());
+					predicate.getExpressions().add(predicate3);
+
+				}if (product.getBrandCode() != null && product.getBrandCode() != 0) {
+					Predicate predicate4 = cb.equal(root.get("brandCode"),product.getBrandCode());
+					predicate.getExpressions().add(predicate4);
+
+				}if (product.getAuditStatus() != null && product.getAuditStatus() != 0) {
+					Predicate predicate5 = cb.equal(root.get("auditStatus"),product.getAuditStatus());
+					predicate.getExpressions().add(predicate5);
+
+				}
+				if (product.getIsEffective() != null) {
+					Predicate predicate6 = cb.equal(root.get("isEffective"),product.getIsEffective());
+					predicate.getExpressions().add(predicate6);
+
+				}
+
+				return predicate;
+			}
+		};
+		page= productDao.findAll(specification,pageable);
+
+		List<Product> list = page.getContent();
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getAgent() != null) {
 				list.get(i).setAgentName(list.get(i).getAgent().getName());
@@ -219,18 +266,7 @@ public class ProductService {
 				list.get(i).setBrandName(list.get(i).getBrand().getName());
 			}
 		}
-		return list;
-	}
-
-	public Integer bothtotal(Product product, int size) {
-		int pageCount = 0;
-		int rowCount = productDao.bothtotal(product).intValue();
-		if ((rowCount % size) == 0) {
-			pageCount = rowCount / size;
-		} else {
-			pageCount = rowCount / size + 1;
-		}
-		return pageCount;
+		return page;
 	}
 
 	public List<Product> selecttoqsale() {
@@ -275,7 +311,5 @@ public class ProductService {
 		return list;
 	}
 
-	public List<Product> selectoption() {
-		return productDao.selectoption();
-	}
+
 }
