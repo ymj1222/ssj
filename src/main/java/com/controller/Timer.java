@@ -71,7 +71,7 @@ public class Timer {
     		int cc=rc.queryNumber(wayBillNo);
     		if(cc==b) {
     			ac.setTime(ar.getTime());
-    			ac.setName("已到达目的地");
+    			ac.setName("fuck");
     			ac.setHowLong("0");
     			ac.setDistance("0");
     		}else {

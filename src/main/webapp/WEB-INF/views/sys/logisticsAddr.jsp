@@ -49,7 +49,12 @@
 				var cont = '';
 				$.each(datas,function(i,obj){
 					cont = cont +'<tr>';
-					cont = cont +'<td>'+obj.name+'</td>';
+					if(obj.name=='fuck'){
+						cont = cont +'<td>'+"已到达目的地"+'</td>';
+					}else{
+
+						cont = cont +'<td>'+obj.name+'</td>';
+					}
 					cont = cont +'<td>'+obj.time+'</td>';
 					cont = cont +'<td>'+obj.distance+'</td>';
 					cont = cont +'<td>'+obj.howLong+'天</td>';
