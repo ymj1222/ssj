@@ -48,7 +48,6 @@ public class PhotoConterllor {
         String filen = file.getOriginalFilename();
         String fileName = System.currentTimeMillis() + "."+filen.substring(filen.lastIndexOf(".")+1);
         String destFileName = request.getServletContext().getRealPath("") + "photo/"+ fileName;
-        System.out.println(destFileName);
         File destFile = new File(destFileName);
         destFile.getParentFile().mkdirs();
         file.transferTo(destFile);
