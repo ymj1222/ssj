@@ -30,10 +30,11 @@ public class RoleAuthController {
 			pageSize = page.getPageSize() + "";
 		}
 		int pageCount = 0;
-		List<RoleAuth> list = service.queryAll(Integer.parseInt(pageNow),Integer.parseInt(pageSize));
-		pageCount = service.gettotal(Integer.parseInt(pageSize));
+		org.springframework.data.domain.Page<RoleAuth> list = service.queryAll(Integer.parseInt(pageNow),Integer.parseInt(pageSize));
+		pageCount = list.getTotalPages();
+		List<RoleAuth>l=list.getContent();
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
+		page.setList(l);
 		page.setPageCount(pageCount);
 		page.setPageNow(Integer.parseInt(pageNow));
 		String parseJSON = JsonUtils.beanToJson(page);

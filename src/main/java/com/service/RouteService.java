@@ -15,7 +15,8 @@ RouteDao dao;
 		return dao.findAll();
 	}
 	public void deleteByCode(String code) {
-		dao.deleteByCode(code);
+		Route r=dao.findByCode(code);
+		dao.deleteById(r.getId());
 	} 
 	public Route queryByCode(String code) {
 		return dao.findByCode(code);

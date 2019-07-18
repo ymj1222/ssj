@@ -15,16 +15,17 @@ WayBillDao dao;
 		return dao.findAll();
 	}
 	public void deleteByWayBillNo(String wayBillNo) {
-		dao.deleteByWayBillNo(wayBillNo);
+		WayBill w=dao.findByWayBillNo(wayBillNo);
+		dao.deleteById(w.getId());
 	} 
 	public void addWayBill(WayBill wayBill) {
-		dao.addWayBill(wayBill);
+		dao.save(wayBill);
 	}
 	public WayBill queryByWayBillNo(String wayBillNo) {
 		return dao.findByWayBillNo(wayBillNo);
 	}
 	public void updateWayBill(WayBill wayBill) {
-		dao.updateWayBill(wayBill);
+		dao.update(wayBill.getNumber(),wayBill.getUnit(),wayBill.getStartCity(),wayBill.getEndCity(),wayBill.getrName(),wayBill.getrPhone(),wayBill.getrAddr(),wayBill.getWayBillNo());
 	}
 	
 }

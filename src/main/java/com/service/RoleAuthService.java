@@ -3,6 +3,10 @@ package com.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.dao.RoleAuthDao;
@@ -14,29 +18,24 @@ RoleAuthDao dao;
 	public void add(RoleAuth auth) {
 		String str[]=auth.getAuthCode().split(",");
 		for (int i = 0; i < str.length; i++) {
-			dao.add(auth.getRoleCode(),str[i]);
+			RoleAuth ra=new RoleAuth();
+			ra.setAuthCode(str[i]);
+			ra.setRoleCode(auth.getRoleCode());
+			dao.save(ra);
 		}
 	}
 	public List<RoleAuth> queryByRoleCode(String roleCode) {
-		return dao.queryByRoleCode(roleCode);
+		return dao.findByRoleCode(roleCode);
 	}
 	public void update(RoleAuth roleAuth) {
-		dao.update(roleAuth);
+		dao.update(roleAuth.getAuthCode(),roleAuth.getRoleCode());
 	}
-	public Integer gettotal(int pageSize) {
-		int pageCount = 0;
-		int rowCount = dao.gettotal();
-		if ((rowCount % pageSize) == 0) {
-			pageCount = rowCount / pageSize;
-		} else {
-			pageCount = rowCount / pageSize + 1;
-		}
-		return pageCount;
-	}
-	public List<RoleAuth> queryAll(int pageNow,int pageSize) {
-		return dao.select(pageNow, pageSize);
+	public Page<RoleAuth> queryAll(int pageNow, int pageSize) {
+		Pageable pageable= PageRequest.of(pageNow,pageSize);
+		return dao.findAll(pageable);
 	}
 public void delete(String roleCode,String authCode) {
-	dao.delete(roleCode, authCode);
+		RoleAuth r=dao.findByRoleCodeAndAuthCode(roleCode,authCode);
+	dao.deleteById(r.getId());
 }
 }

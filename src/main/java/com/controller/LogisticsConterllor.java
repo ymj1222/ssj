@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,27 +63,25 @@ public class LogisticsConterllor {
 	}
 	 @RequestMapping("/logisticsList")
 	    public void list(HttpServletRequest request,HttpServletResponse response,String pageNow,String pageSize) throws IOException{
-	    	Page page = new Page();
-	    	Pageh ph=new Pageh();
-			if (null == pageNow || "".equals(pageNow.trim())) {
-				pageNow = "1";
-			}
-			if (null == pageSize || "".equals(pageNow.trim())) {
-				pageSize = page.getPageSize() + "";
-			}
-			int pageCount = 0;
-			String name=request.getParameter("sname");
-			ph.setPageNow((Integer.parseInt(pageNow)-1)*Integer.parseInt(pageSize));
-			ph.setPageSize(Integer.parseInt(pageSize));
-			ph.setObject1(name);
-			List<Logistics> list = logisticsService.select(ph);
-			pageCount = logisticsService.gettotal(ph);
-			response.setCharacterEncoding("utf-8");
-			page.setList(list);
-			page.setPageCount(pageCount);
-			page.setPageNow(Integer.parseInt(pageNow));
-			String parseJSON = JsonUtils.beanToJson(page);
-			response.getWriter().write(parseJSON);
+		 if (null == pageNow || "".equals(pageNow.trim())) {
+			 pageNow = "1";
+		 }
+		 if (null == pageSize || "".equals(pageNow.trim())) {
+			 pageSize = "3";
+		 }
+		 String sname=request.getParameter("sname");
+		 sname=sname.replaceAll("_","\\\\_");
+		 int pageNow1=Integer.parseInt(pageNow)-1;
+		 Pageable page= PageRequest.of(pageNow1,Integer.parseInt(pageSize), Sort.by(Sort.Direction.DESC, "id"));
+		 org.springframework.data.domain.Page<Logistics> list=logisticsService.select(sname,page);
+		 List<Logistics>l=list.getContent();
+		 Page pp=new Page();
+		 pp.setPageCount(list.getTotalPages());
+		 pp.setList(l);
+		 pp.setPageNow(Integer.parseInt(pageNow));
+		 response.setCharacterEncoding("utf-8");
+		 String parseJSON = JsonUtils.beanToJson(pp);
+		 response.getWriter().write(parseJSON);
 	    }
 
 	

@@ -43,7 +43,7 @@
 							cont = cont +'<td>'+obj.account+'</td>';
 							cont = cont +'<td>'+obj.levelMark+'</td>';
 							cont = cont +'<td>'+obj.goldCoin+'</td>';
-							if(obj.state){
+							if(obj.state=='1'){
 								cont+='<td>有效</td>'
 							}else{
 								cont+='<td>失效</td>'

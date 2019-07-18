@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,45 +26,47 @@ import com.util.Page;
 @Controller
 public class AuthController {
 	@Autowired
-   private AuthService service;
+	private AuthService service;
+
 	@RequestMapping("/toAuthList")
-	 public String authList() {
-		 return "forward:/WEB-INF/views/sys/authList.jsp";
-	 }
+	public String authList() {
+		return "forward:/WEB-INF/views/sys/authList.jsp";
+	}
+
 	@RequestMapping("/toAuthAdd")
 	public String authAdd() {
 		return "forward:/WEB-INF/views/sys/authAdd.jsp";
 	}
+
 	@RequestMapping("/toAuthUpdate")
-	public String authUpdate(String code,HttpServletRequest request) {
+	public String authUpdate(String code, HttpServletRequest request) {
 		request.setAttribute("code", code);
 		return "forward:/WEB-INF/views/sys/authUpdate.jsp";
 	}
+
 	@ResponseBody
-    @RequestMapping("/authList")
-    public Page list(HttpServletRequest request,HttpServletResponse response,String pageNow,String pageSize) throws IOException{
-    	Page page = new Page();
-    	Pageh ph=new Pageh();
+	@RequestMapping("/authList")
+	public Page list(HttpServletRequest request, HttpServletResponse response, String pageNow, String pageSize) throws IOException {
 		if (null == pageNow || "".equals(pageNow.trim())) {
 			pageNow = "1";
 		}
 		if (null == pageSize || "".equals(pageNow.trim())) {
-			pageSize = page.getPageSize() + "";
+			pageSize = "3";
 		}
-		int pageCount = 0;
-		String name=request.getParameter("sname");
-		ph.setPageNow((Integer.parseInt(pageNow)-1)*Integer.parseInt(pageSize));
-		ph.setPageSize(Integer.parseInt(pageSize));
-		name=name.replaceAll("_","\\\\_");
-		ph.setObject1(name);
-		List<Auth> list = service.queryAll(ph);
-		pageCount = service.gettotal(ph);
+		String sname = request.getParameter("sname");
+		sname = sname.replaceAll("_", "\\\\_");
+		int pageNow1 = Integer.parseInt(pageNow) - 1;
+		Pageable page = PageRequest.of(pageNow1, Integer.parseInt(pageSize), Sort.by(Sort.Direction.DESC, "id"));
+		org.springframework.data.domain.Page<Auth> list = service.queryAll(sname, page);
+		List<Auth> l = list.getContent();
+		Page pp = new Page();
+		pp.setPageCount(list.getTotalPages());
+		pp.setList(l);
+		pp.setPageNow(Integer.parseInt(pageNow));
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
-		page.setPageCount(pageCount);
-		page.setPageNow(Integer.parseInt(pageNow));
-		return page;
-    }
+		return pp;
+	}
+
 	@ResponseBody
     @RequestMapping("/authQuery")
     public List<Auth> query(HttpServletRequest request,HttpServletResponse response) throws IOException{

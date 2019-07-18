@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dao.AuthDao;
@@ -13,39 +15,36 @@ import com.entity.Pageh;
 public class AuthService {
 	@Autowired
 AuthDao dao;
-	public List<Auth> queryAll(Pageh ph){
-		return dao.select(ph);
+	public Page<Auth> queryAll(String name, Pageable pageable){
+		Page<Auth> page = null;
+		if(null !=name) {
+			page=dao.findByNameContaining(name, pageable);
+		}else{
+			page=dao.findAll(pageable);
+		}
+		return page;
 	}
 	public void delete(String code,String isDelete) {
 		dao.delete(code,isDelete);
 	} 
 	public void add(Auth auth) {
-		dao.add(auth);
+		dao.save(auth);
 	}
 	public List<Auth> query(){
-		return dao.query();
+		return dao.findAll();
 	}
 	public Auth queryByCode(String code) {
-		return dao.queryByCode(code);
+		return dao.findByCodeAndIsDelete(code,"1");
 	}
 	public void update(Auth auth) {
-		dao.update(auth);
+		dao.update(auth.getName(),auth.getUrl(),auth.getIsBase(),auth.getMenuType(),auth.getDescri(),auth.getCode());
 	}
-	public Integer gettotal(Pageh ph) {
-		int pageCount = 0;
-		int rowCount = dao.gettotal(ph);
-		if ((rowCount % ph.getPageSize()) == 0) {
-			pageCount = rowCount / ph.getPageSize();
-		} else {
-			pageCount = rowCount / ph.getPageSize() + 1;
-		}
-		return pageCount;
-	}
+
 	public List<List<Auth>> queryPcode(){
 		List<List<Auth>> list = new ArrayList<>();
-		List<Auth> listp = dao.queryPcode();
+		List<Auth> listp = dao.queryPcode("");
 		for (Auth auth : listp) {
-			List<Auth> listchild = dao.queryChild(auth.getCode());
+			List<Auth> listchild = dao.findByPCode(auth.getCode());
 			listchild.add(0,auth);
 			list.add(listchild);
 		}

@@ -12,13 +12,14 @@ public class AccountAuthService {
 	@Autowired
 AccountAuthDao dao;
 	public void delete(String account,String authCode) {
-		dao.delete(account,authCode);
+		AccountAuth a=dao.findByAccountAndAuthCode(account,authCode);
+		dao.deleteById(a.getId());
 	} 
 	public void add(AccountAuth auth) {
-		dao.add(auth);
+		dao.save(auth);
 	}
 	public List<AccountAuth> queryByAccount(String account) {
-		return dao.queryByAccount(account);
+		return dao.findByAccount(account);
 	}
 
 }

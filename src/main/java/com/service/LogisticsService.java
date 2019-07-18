@@ -3,6 +3,8 @@ package com.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dao.LogisticsDao;
@@ -15,40 +17,37 @@ public class LogisticsService {
 	private LogisticsDao logisticsDao;
 
 	public void add(Logistics logistics) {
-		logisticsDao.add(logistics);
+		logisticsDao.save(logistics);
 	}
 
 	/**
-	 * ¸ù¾ÝidÉ¾³ý
+	 * ï¿½ï¿½ï¿½ï¿½idÉ¾ï¿½ï¿½
 	 * 
 	 * @param id
 	 */
 	public void delete(String code) {
-		logisticsDao.delete(code);
+		Logistics l=logisticsDao.findByCode(code);
+		logisticsDao.deleteById(l.getId());
 	}
 
 	/**
-	 * µÃµ½ËùÓÐÊý¾Ý
+	 * ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @return
 	 */
-	public List<Logistics> select(Pageh ph) {
-		return logisticsDao.select(ph);
+	public Page<Logistics> select(String name, Pageable pageable){
+		Page<Logistics> page = null;
+		if(null !=name) {
+			page=logisticsDao.findByNameContaining(name, pageable);
+		}else{
+			page=logisticsDao.findAll(pageable);
+		}
+		return page;
 	}
 
 	/**
-	 * µÃµ½Êý¾Ý×ÜÒ³Êý
+	 * ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½
 	 */
-	public Integer gettotal(Pageh ph) {
-		int pageCount = 0;
-		int rowCount = logisticsDao.gettotal(ph);
-		if ((rowCount % ph.getPageSize()) == 0) {
-			pageCount = rowCount / ph.getPageSize();
-		} else {
-			pageCount = rowCount / ph.getPageSize() + 1;
-		}
-		return pageCount;
-	}
 
 	
 }

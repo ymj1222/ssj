@@ -12,12 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.entity.Account;
-import com.entity.Verification;
 import com.service.AccountAuthService;
 import com.service.AccountService;
 import com.service.AuthService;
 import com.service.ShoppingGuideService;
-import com.service.VerificationService;
 import com.util.MD5Util;
     
 @Controller
@@ -25,8 +23,6 @@ public class LoginController{
 	/**
 	 * 
 	 */
-	@Autowired
-	private VerificationService  userService;
 	@Autowired
 	AccountService ac;
 	@Autowired
@@ -43,7 +39,7 @@ public class LoginController{
 		String fuck=request.getParameter("fuckYou");
 		password=MD5Util.md5Encode(password);
 		HttpSession hs = request.getSession();
-			Verification user  = userService.valid(account,password);
+			Account user  = ac.valid(account,password);
 			if(user==null||"".equals(user.getAccount())) {
 				request.setAttribute("hiddenCode", "1");
 				request.setAttribute("errorMark", "’À∫≈ªÚ’ﬂ√‹¬Î¥ÌŒÛ");

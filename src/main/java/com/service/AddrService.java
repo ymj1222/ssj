@@ -19,20 +19,21 @@ AddrDao dao;
 		return dao.findAll();
 	}
 	public void deleteByCode(String code) {
-		dao.deleteByCode(code);
+		Addr a=dao.findByWayBillNo(Integer.parseInt(code));
+		dao.deleteById(a.getId());
 	} 
 	public void addAddr(Addr addr) {
-		dao.addAddr(addr);
+		dao.save(addr);
 	}
 	public Addr queryByCode(String code) {
-		return dao.findByCode(code);
+		return dao.findByCityCode(code);
 	}
 	public int queryNumber(String wayBillNo) {
 		WayBill ww=w.findByWayBillNo(wayBillNo);
-		return dao.queryNumber(Integer.toString(ww.getId()));
+		return dao.countByWayBillNo(ww.getId().toString());
 	}
 	public Addr findCityCodeByWayBillNo(String wayBillNo) {
 		WayBill ww=w.findByWayBillNo(wayBillNo);
-		return dao.findCityCodeBywayBillNo(Integer.toString(ww.getId()));
+		return dao.findByWayBillNoOrderByIdDesc(ww.getId().toString()).get(0);
 	}
 }

@@ -6,6 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.dao.OptionLogDao;
@@ -15,8 +19,9 @@ import com.util.DateUtils;
 public class OptionLogService {
 	@Autowired
 	OptionLogDao dao;
-	public List<OptionLog> queryAll(int pageNow,int pageSize){
-		return dao.select(pageNow, pageSize);
+	public Page<OptionLog> queryAll(int pageNow, int pageSize){
+		Pageable pageable= PageRequest.of(pageNow,pageSize, Sort.by(Sort.Direction.DESC, "id"));
+		return dao.findAll(pageable);
 	}
 	public void add(int type,HttpServletRequest request) {
 		HttpSession hs = request.getSession();
@@ -24,17 +29,7 @@ public class OptionLogService {
     	o.setOperator(hs.getAttribute("account").toString());
     	o.setOperateTime(DateUtils.getCurrentDateTime());
     	o.setOperateType(type);
-		dao.add(o);
-	}
-	public Integer gettotal(int pageSize) {
-		int pageCount = 0;
-		int rowCount = dao.gettotal();
-		if ((rowCount % pageSize) == 0) {
-			pageCount = rowCount / pageSize;
-		} else {
-			pageCount = rowCount / pageSize + 1;
-		}
-		return pageCount;
+		dao.save(o);
 	}
 
 }

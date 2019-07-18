@@ -33,10 +33,11 @@ public class OptionLogController {
 			pageSize = page.getPageSize() + "";
 		}
 		int pageCount = 0;
-		List<OptionLog> list = service.queryAll((Integer.parseInt(pageNow)-1)*Integer.parseInt(pageSize),Integer.parseInt(pageSize));
-		pageCount = service.gettotal(Integer.parseInt(pageSize));
+		org.springframework.data.domain.Page<OptionLog> list = service.queryAll((Integer.parseInt(pageNow)-1)*Integer.parseInt(pageSize),Integer.parseInt(pageSize));
+		pageCount = list.getTotalPages();
+		List<OptionLog>l=list.getContent();
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
+		page.setList(l);
 		page.setPageCount(pageCount);
 		page.setPageNow(Integer.parseInt(pageNow));
 		String parseJSON = JsonUtils.beanToJson(page);

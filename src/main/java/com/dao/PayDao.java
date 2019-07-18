@@ -4,32 +4,25 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.entity.Pay;
 
 @Repository
-public class PayDao {
-	@PersistenceContext
-	private EntityManager entityManager;
-	public List<Pay>select(){
-		String jpql=" select p from Pay as p order by p.code asc";
-		Query query=entityManager.createQuery(jpql);
-		return query.getResultList();
-	}
+public interface PayDao extends JpaRepository<Pay, Integer> {
+    @Query(value="select * from zj_pay order by code asc ",nativeQuery = true)
+	List<Pay>findOrderByIdDesc();
+	@Modifying
 	@Transactional
-	public void update(String code) {
-		String jpql="update Pay set code=?1 where code=?2";
-		Query query=entityManager.createQuery(jpql);
-		query.setParameter(1, code).setParameter(2, "1").executeUpdate();
-	}
+	@org.springframework.data.jpa.repository.Query("update Pay set code=?1 where code=?2")
+	void update(String code,String code1);
+	@Modifying
 	@Transactional
-	public void update1(String code,String name) {
-		String jpql="update Pay set code=?1 where code=?2 and name=?3";
-		Query query=entityManager.createQuery(jpql);
-		query.setParameter(1, "1").setParameter(2, code).setParameter(3, name).executeUpdate();
-	}
+	@org.springframework.data.jpa.repository.Query("update Pay set code=?1 where code=?2 and name=?3")
+	void update1(String code,String code1,String name);
 }

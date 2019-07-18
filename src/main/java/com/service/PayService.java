@@ -14,14 +14,14 @@ public class PayService {
     PayDao dao;
 	
 	public List<Pay> queryAll(){
-		return dao.select();
+	    return dao.findOrderByIdDesc();
 	}
 	
 	public void update(String code) {
-		dao.update(code);
+		dao.update(code,"1");
 	}
 	public void update1(String code,String name) {
-		dao.update1(code,name);
+		dao.update1("1",code,name);
 	}
 
 }

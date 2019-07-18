@@ -15,7 +15,7 @@ CityDao dao;
 		return dao.findAll();
 	}
 	public City queryByCode(String code) {
-		return dao.findByCode(code);
+		return dao.findByCode(Integer.parseInt(code));
 	}
 	
 }

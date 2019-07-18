@@ -1,6 +1,7 @@
 package com.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,10 +31,11 @@ public class BrowsingHistoryController {
 			pageSize = page.getPageSize() + "";
 		}
 		int pageCount = 0;
-		List<BrowsingHistory> list = service.queryAll((Integer.parseInt(pageNow)-1)*Integer.parseInt(pageSize),Integer.parseInt(pageSize),code);
-		pageCount = service.gettotal(Integer.parseInt(pageSize),code);
+		org.springframework.data.domain.Page<BrowsingHistory> list = service.queryAll(Integer.parseInt(pageNow)-1,Integer.parseInt(pageSize),code);
+		pageCount = list.getTotalPages();
+		List<BrowsingHistory>l=list.getContent();
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
+		page.setList(l);
 		page.setPageCount(pageCount);
 		page.setPageNow(Integer.parseInt(pageNow));
 		String parseJSON = JsonUtils.beanToJson(page);

@@ -3,6 +3,10 @@ package com.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.dao.AccountAuthDao;
@@ -11,8 +15,7 @@ import com.dao.AuthDao;
 import com.entity.Account;
 import com.entity.AccountAuth;
 import com.entity.Auth;
-import com.entity.Pageh;
-import com.entity.Verification;
+
 @Service
 public class AccountService {
 	
@@ -22,43 +25,42 @@ public class AccountService {
 	AuthDao ad;
 	@Autowired
 	AccountAuthDao aad;
-	
-	public List<Account> queryAll(Pageh ph){
-		return dao.select(ph);
+
+	public Page<Account> queryAll(String name, Pageable pageable){
+		Page<Account> page = null;
+		if(null !=name) {
+			 page=dao.findByNameContaining(name, pageable);
+		}else{
+			page=dao.findAll(pageable);
+		}
+		return page;
 	}
 	public void delete(String state,String code) {
 		dao.delete(state,code);
 	} 
 	public void add(Account account) {
-		List<Auth> list=ad.query();
+		List<Auth> list=ad.findAll();
 		for (int i = 0; i < list.size(); i++) {	
 			AccountAuth aa=new AccountAuth();
 			aa.setAccount(account.getAccount());
 			aa.setAuthCode(list.get(i).getCode());
-			aad.add(aa);
+			aad.save(aa);
 		}
-		dao.add(account);
+		dao.save(account);
 	}
-	public Verification login(String account,String password) {
-		return dao.login(account, password);
+	public Account login(String account,String password) {
+		return dao.findByAccountAndPassword(account, password);
+	}
+	public Account valid(String account, String password) throws Exception {
+		return dao.findByAccountAndPasswordAndState(account,password,"0");
 	}
 	public Account queryByAccount(String account) {
-		return dao.queryByAccount(account);
+		return dao.findByAccount(account);
 	}
 	public void update(Account account) {
-		dao.update(account);
-	}
-	public Integer gettotal(Pageh ph) {
-		int pageCount = 0;
-		int rowCount = dao.gettotal(ph);
-		if ((rowCount % ph.getPageSize()) == 0) {
-			pageCount = rowCount / ph.getPageSize();
-		} else {
-			pageCount = rowCount / ph.getPageSize() + 1;
-		}
-		return pageCount;
+		dao.update(account.getPassword(),account.getAccount());
 	}
 public Account daoGou(String code) {
-	return dao.daoGou(code);
+	return dao.findByCode(code);
 }
 }

@@ -62,7 +62,6 @@ public class Timer {
 	}
     @RequestMapping("/logisticsAddrList")
     public void query(HttpServletResponse response,HttpServletRequest request,String wayBillNo) throws IOException {
-    	
     	Addr ar=a.findCityCodeByWayBillNo(wayBillNo);
             City ct=c.queryByCode(ar.getCityCode());
             List<AddrCity>list=new ArrayList<>();

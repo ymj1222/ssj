@@ -12,19 +12,21 @@ public class RouteCityService {
 	@Autowired
 RouteCityDao dao;
 	public void deleteByRouteCode(String code) {
-		dao.deleteByRouteCode(code);
+		RouteCity r=dao.findByWayBillNo(code);
+		dao.deleteById(r.getId());
 	} 
 	public void addRouteCity(RouteCity routeCity) {
-		dao.addRouteCity(routeCity);
+		dao.save(routeCity);
 	}
 	public RouteCity queryByRouteCode(String wayBillNo,String cityCode) {
-		return dao.findByRouteCode(wayBillNo,cityCode);
+		return dao.findByWayBillNoAndCityCode(wayBillNo,cityCode);
 	}
 	public RouteCity findBySequence(String seqyence,String wayBillNo) {
-		return dao.findBySequence(seqyence,wayBillNo);
+		int s=Integer.parseInt(seqyence);
+		return dao.findBySequenceAndWayBillNo(s,wayBillNo);
 	}
 	public int queryNumber (String wayBillNo) {
-		return dao.queryNumber(wayBillNo);
+		return dao.countByWayBillNo(wayBillNo);
 	}
 	
 }

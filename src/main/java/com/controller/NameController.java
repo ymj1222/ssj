@@ -31,7 +31,7 @@ public void getName(HttpServletRequest request,HttpServletResponse response) thr
 			name="超管";
 		}
 		else {
-			name=ad.queryByAccount(ac).getName();
+			name=ad.findByAccount(ac).getName();
 		}
 		hs.setAttribute("name", name);
 		response.setCharacterEncoding("utf-8");

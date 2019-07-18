@@ -3,6 +3,8 @@ package com.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dao.OrgDao;
@@ -12,36 +14,33 @@ import com.entity.Pageh;
 public class OrgService {
 	@Autowired
 OrgDao dao;
-	public List<Org> queryAll(Pageh ph){
-		return dao.select(ph);
+	public Page<Org> queryAll(String name, Pageable pageable){
+		Page<Org> page = null;
+		if(null !=name) {
+			page=dao.findByNameContaining(name, pageable);
+		}else{
+			page=dao.findAll(pageable);
+		}
+		return page;
 	}
 	public List<Org> query(){
-		return dao.query();
+		return dao.findAll();
 	}
 	public void delete(String code) {
-		dao.delete(code);
-	} 
+		Org o=dao.findByCode(code);
+		dao.deleteById(o.getId());
+	}
 	public void add(Org account) {
-		dao.add(account);
+		dao.save(account);
 	}
 	public Org queryByCode(String code) {
-		return dao.queryByCode(code);
+		return dao.findByCode(code);
 	}
 	public void enable(String state,String code) {
 		dao.enable(state,code);
 	}
 	public void update(Org org) {
-		dao.update(org);
-	}
-	public Integer gettotal(Pageh ph) {
-		int pageCount = 0;
-		int rowCount = dao.gettotal(ph);
-		if ((rowCount % ph.getPageSize()) == 0) {
-			pageCount = rowCount / ph.getPageSize();
-		} else {
-			pageCount = rowCount / ph.getPageSize() + 1;
-		}
-		return pageCount;
+		dao.update(org.getName(),org.getManagerCode(),org.getpCode(),org.getCode());
 	}
 
 }
