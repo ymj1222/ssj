@@ -87,7 +87,7 @@ public class WarehousingAndOutService {
 	@Transactional
 	public void addmount(int id, int amount) {
 		Warehouse warehouse =warehouseDao.getById(id);
-		 warehouseDao.addamount(id,amount+warehouse.getAmount());
+		 warehouseDao.addamount(amount+warehouse.getAmount(),id);
 		WarehousingAndOut WAO = new WarehousingAndOut();
 		WAO.setAmount(amount);
 		WAO.setType(2);
