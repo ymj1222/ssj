@@ -1,17 +1,5 @@
 package com.controller;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.entity.Advertisement;
 import com.entity.AdvertisementClick;
 import com.entity.Photo;
@@ -23,7 +11,19 @@ import com.service.ProductService;
 import com.util.DateUtils;
 import com.util.JsonUtils;
 import com.util.Page;
-import com.util.Pageh;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 @Controller
 public class AdvertisementClickConterllor {
@@ -45,44 +45,32 @@ public class AdvertisementClickConterllor {
 	public String findselect() {
 		return "forward:/WEB-INF/views/advertisement/advertisementClickList.jsp";
 	}
-	
 
-	@ResponseBody
-	@RequestMapping("/advertisementClickselect")
-	public void select(Pageh pageh, Model model, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
-		Page page = new Page();
-		String pageNow = request.getParameter("pageNow");
-		String pageSize = request.getParameter("pageSize");
 
-		if (null == pageNow || "".equals(pageNow.trim())) {
-			pageNow = "1";
-		}
-		if (null == pageSize || "".equals(pageNow.trim())) {
-			pageSize = page.getPageSize() + "";
-		}
-		int pageCount = 0;
-		String name = request.getParameter("accm");
-		pageh.setPageNow((Integer.parseInt(pageNow) - 1) * Integer.parseInt(pageSize));
-		pageh.setPageSize(Integer.parseInt(pageSize));
-		name=name.replaceAll("_","\\\\_");
-		pageh.setObject1(name);
-		pageCount = advertisementClickService.gettotal(pageh);
-		List<AdvertisementClick> list = advertisementClickService.select(pageh);
-		response.setCharacterEncoding("utf-8");
-		page.setList(list);
-		page.setPageCount(pageCount);
-		page.setPageNow(Integer.parseInt(pageNow));
-		String parseJSON = JsonUtils.beanToJson(page);
-		response.getWriter().write(parseJSON);
-	}
-	/**
-	 * �޸�����
-	 * 
-	 * @param code
-	 * @param model
-	 * @return
-	 */
+    @ResponseBody
+    @RequestMapping("/advertisementClickselect")
+    public void select(HttpServletRequest request, HttpServletResponse response, String pageNow, String pageSize) throws IOException {
+        if (null == pageNow || "".equals(pageNow.trim())) {
+            pageNow = "1";
+        }
+        if (null == pageSize || "".equals(pageNow.trim())) {
+            pageSize = "3";
+        }
+        String name=request.getParameter("accm");
+        name=name.replaceAll("_","\\\\_");
+        int pageNow1=Integer.parseInt(pageNow)-1;
+        Pageable page= PageRequest.of(pageNow1,Integer.parseInt(pageSize), Sort.by(Sort.Direction.DESC, "id"));
+        org.springframework.data.domain.Page<AdvertisementClick> list=advertisementClickService.queryAll(name,page);
+        List<AdvertisementClick> l= list.getContent();
+        Page pp=new Page();
+        pp.setPageCount(list.getTotalPages());
+        pp.setList(l);
+        pp.setPageNow(Integer.parseInt(pageNow));
+        response.setCharacterEncoding("utf-8");
+        String parseJSON = JsonUtils.beanToJson(pp);
+        response.getWriter().write(parseJSON);
+    }
+
 	@RequestMapping(value = "/advertisementClickUpdate")
 	public String update(Advertisement advertisement,AdvertisementClick advertisementClick, Model model) {
 		Advertisement adver = advertisementService.getquery(advertisement.getPhoto());

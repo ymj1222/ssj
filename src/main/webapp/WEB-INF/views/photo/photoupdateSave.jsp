@@ -24,7 +24,7 @@
 							<div class="col-md-12">
 								<div class="panel">
 									<div class="panel-body">
-										<input type="hidden" name="code" value="${photo.code}"	>
+										<input type="hidden" name="code" value="${photo.code}">
 										<input type="text" name="name" value="${photo.name}"
 											class="form-control">
 									</div>
