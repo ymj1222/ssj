@@ -22,12 +22,13 @@ public class ServiceRecord {
 	/**
 	 * 导购员编号
 	 */
-	
+	@Column(name = "shopping_guide_code")
 	private String ShoppingGuideCode;
 
 	/**
 	 * 导购员姓名
 	 */
+	@Column(name = "shopping_guide_name")
 	private String ShoppingGuideName;
 	/**
 	 * 用户的编号

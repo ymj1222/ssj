@@ -2,20 +2,24 @@ package com.service;
 
 import java.util.List;
 
+import com.dao.TerminalDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.dao.TerminalDao;
 import com.entity.Terminal;
 import com.util.Pageh;
 
 @Service
 public class TerminalService {
 	@Autowired
-	private TerminalDao terminalDao;
+	private TerminalDao terminalD;
 
 	public void add(Terminal ter) {
-		terminalDao.add(ter);
+		terminalD.save(ter);
 	}
 
 	/**
@@ -24,8 +28,7 @@ public class TerminalService {
 	 * @param id
 	 */
 	public void delete(String id) {
-		Integer code = new Integer(id);
-		terminalDao.delete(code);
+		terminalD.deleteById(Integer.valueOf(id));
 	}
 
 	/**
@@ -33,24 +36,16 @@ public class TerminalService {
 	 * 
 	 * @return
 	 */
-	public List<Terminal> select(Pageh pageh) {
-		List<Terminal> list = terminalDao.select(pageh);
-		return list;
-	}
-
-	/**
-	 * 得到数据总页数
-	 */
-	public Integer gettotal(Pageh pageh) {
-		Integer pageCount = 0;
-		String rowCounts = terminalDao.gettotal(pageh);
-		Integer rowCount = Integer.parseInt(rowCounts);
-		if ((rowCount % pageh.getPageSize()) == 0) {
-			pageCount = rowCount / pageh.getPageSize();
-		} else {
-			pageCount = rowCount / pageh.getPageSize() + 1;
+	public Page<Terminal> select(Pageh pageh) {
+		if(pageh.getObject1()!=null){
+			Pageable pageable =  PageRequest.of(pageh.getPageNow()-1, pageh.getPageSize());
+			Page<Terminal> page=terminalD.getByNameContainingOrderByIdDesc(pageh.getObject1(),pageable);
+			return page;
+		}else {
+			Pageable pageable =  PageRequest.of(pageh.getPageNow(), pageh.getPageSize(),new Sort(Sort.Direction.DESC,"id"));
+			Page<Terminal> page=terminalD.findAll(pageable);
+			return page;
 		}
-		return pageCount;
 	}
 
 	/**
@@ -61,18 +56,18 @@ public class TerminalService {
 	 */
 	public Terminal updatequery(String id) {
 		Integer code = new Integer(id);
-		Terminal ter = terminalDao.findbyid(code);
+		Terminal ter = terminalD.getById(code);
 		return ter;
 	}
 
 	/**
 	 * 修改数据
 	 * 
-	 * @param id
+	 * @param
 	 * @param meetroom
 	 */
 	public void update(Terminal meetroom) {
-		terminalDao.updateSave(meetroom);
+		terminalD.save(meetroom);
 	}
 
 	/**
@@ -81,7 +76,7 @@ public class TerminalService {
 	 * @return
 	 */
 	public List<Terminal> queryCode() {
-		List<Terminal> list = terminalDao.queryCode();
+		List<Terminal> list = terminalD.findAll();
 		return list;
 	}
 }

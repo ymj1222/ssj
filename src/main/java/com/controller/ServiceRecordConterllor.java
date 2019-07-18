@@ -54,16 +54,13 @@ public class ServiceRecordConterllor {
 		if (null == pageSize || "".equals(pageNow.trim())) {
 			pageSize = page.getPageSize() + "";
 		}
-		Integer pageCount = 0;
-		pageh.setPageNow((Integer.parseInt(pageNow) - 1) * Integer.parseInt(pageSize));
+		pageh.setPageNow(Integer.parseInt(pageNow));
 		pageh.setPageSize(Integer.parseInt(pageSize));
-//		shopp.replaceAll("_", "\\\\_");
 		pageh.setObject1(SearchTool.decodeSpecialCharsWhenLikeUseSlash(shopp));
-		pageCount = serviceRecordService.gettotal(pageh);
-		List<ServiceRecord> list = serviceRecordService.select(pageh);
+		org.springframework.data.domain.Page<ServiceRecord> page1= serviceRecordService.select(pageh);
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
-		page.setPageCount(pageCount);
+		page.setList(page1.getContent());
+		page.setPageCount(page1.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
 		return page;
 	}

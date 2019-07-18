@@ -1,30 +1,40 @@
 package com.service;
 
-import java.util.List;
-
+import com.dao.ServiceReCordDao;
+import com.dao.ShoppingGuideDao;
+import com.entity.ShoppingGuide;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import com.dao.ServiceRecordDao;
+
 import com.entity.ServiceRecord;
 import com.util.Pageh;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
 
 @Service
 public class ServiceRecordService {
-	@Autowired
-	private ServiceRecordDao serviceRecordDao;
 
+	@Autowired
+	private ServiceReCordDao ervice;
+
+	@Autowired
+	private ShoppingGuideDao shopp;
 	/**
 	 * 添加
 	 * 
-	 * @param InformationPush
+	 * @param
 	 */
-	public void add(ServiceRecord serviceRecord, String ShoppingGuideId) {
-		if (ShoppingGuideId != null && !ShoppingGuideId.equals("")) {
-			serviceRecordDao.add(serviceRecord, Integer.parseInt(ShoppingGuideId));
-		} else {
-			return;
-		}
+
+	public void add(ServiceRecord serviceRecord, String ShoppingGuideId){
+		ShoppingGuide shoppingGuide =shopp.getById(Integer.parseInt(ShoppingGuideId));
+		serviceRecord.setShoppingGuideCode(shoppingGuide.getCode());
+		serviceRecord.setShoppingGuideName(shoppingGuide.getName());
+		serviceRecord.setShoppingGuide(shoppingGuide);
+		ervice.save(serviceRecord);
 	}
 
 	/**
@@ -32,37 +42,32 @@ public class ServiceRecordService {
 	 * 
 	 * @return
 	 */
-	public List<ServiceRecord> select(Pageh pageh) {
-		List<ServiceRecord> list = serviceRecordDao.select(pageh);
-		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getStaisfaction().equals("3001")) {
-				list.get(i).setStaisfaction("极差");
-			} else if (list.get(i).getStaisfaction().equals("3002")) {
-				list.get(i).setStaisfaction("差");
-			} else if (list.get(i).getStaisfaction().equals("3003")) {
-				list.get(i).setStaisfaction("一般");
-			} else if (list.get(i).getStaisfaction().equals("3004")) {
-				list.get(i).setStaisfaction("满意");
-			} else if (list.get(i).getStaisfaction().equals("3005")) {
-				list.get(i).setStaisfaction("非常满意");
-			}
-		}
-		return list;
-	}
+	public Page select(Pageh pageh) {
+//		Page<ServiceRecord> Page =null;
 
-	/**
-	 * 得到数据总页数
-	 */
-	public Integer gettotal(Pageh pageh) {
-		Integer pageCount = 0;
-		String rowCounts = serviceRecordDao.gettotal(pageh);
-		Integer rowCount = Integer.parseInt(rowCounts);
-		if ((rowCount % pageh.getPageSize()) == 0) {
-			pageCount = rowCount / pageh.getPageSize();
-		} else {
-			pageCount = rowCount / pageh.getPageSize() + 1;
+		if(pageh.getObject1()!=null){
+			Pageable pageable =  PageRequest.of(pageh.getPageNow()-1, pageh.getPageSize());
+			Page<ServiceRecord>	page=ervice.getByShoppingGuideNameContainingOrderByIdDesc(pageh.getObject1(),pageable);
+			return page;
+		}else {
+			Pageable pageable =  PageRequest.of(pageh.getPageNow(), pageh.getPageSize(),new Sort(Sort.Direction.DESC,"id"));
+			Page<ServiceRecord> page=ervice.findAll(pageable);
+			return page;
 		}
-		return pageCount;
+//		for (int i = 0; i < list.size(); i++) {
+//			if (list.get(i).getStaisfaction().equals("3001")) {
+//				list.get(i).setStaisfaction("极差");
+//			} else if (list.get(i).getStaisfaction().equals("3002")) {
+//				list.get(i).setStaisfaction("差");
+//			} else if (list.get(i).getStaisfaction().equals("3003")) {
+//				list.get(i).setStaisfaction("一般");
+//			} else if (list.get(i).getStaisfaction().equals("3004")) {
+//				list.get(i).setStaisfaction("满意");
+//			} else if (list.get(i).getStaisfaction().equals("3005")) {
+//				list.get(i).setStaisfaction("非常满意");
+//			}
+//		}
+//		return list;
 	}
 
 }

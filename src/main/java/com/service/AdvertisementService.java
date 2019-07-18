@@ -2,13 +2,12 @@ package com.service;
 
 import java.util.List;
 
+import com.dao.TerminalDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dao.AdvertisementDao;
-import com.dao.TerminalDao;
 import com.entity.Advertisement;
-import com.entity.Terminal;
 import com.util.Pageh;
 
 @Service

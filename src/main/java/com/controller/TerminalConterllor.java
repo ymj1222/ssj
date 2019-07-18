@@ -24,8 +24,7 @@ public class TerminalConterllor {
 	private TerminalService terminalService;
 
 	/**
-	 * ï¿½Òµï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½
-	 * 
+	 * ÕÒµ½Ìí¼ÓÒ³Âë
 	 * @return
 	 */
 	@RequestMapping("/findterminalAdd")
@@ -34,8 +33,7 @@ public class TerminalConterllor {
 	}
 
 	/**
-	 * ï¿½Òµï¿½ï¿½Ð±ï¿½Ò³ï¿½ï¿½
-	 * 
+	 * ÕÒµ½ÁÐ±íÒ³Ãæ
 	 * @return
 	 */
 	@RequestMapping("/findterminalList")
@@ -43,11 +41,10 @@ public class TerminalConterllor {
 		return "forward:/WEB-INF/views/terminal/terminalList.jsp";
 	}
 
-	/**
-	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	 * 
+	/***
+	 * Ìí¼Ó
 	 * @param ter
-	 * @param model
+	 * @param request
 	 * @return
 	 */
 	@RequestMapping(value = "/terminalAdd", method = RequestMethod.POST)
@@ -65,9 +62,9 @@ public class TerminalConterllor {
 	}
 
 	/**
-	 * ï¿½ï¿½ï¿½ï¿½idÉ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	 * 
+	 * É¾³ý
 	 * @param id
+	 * @return
 	 */
 	@RequestMapping(value = "/terminalDelete", method = RequestMethod.POST)
 	public String delete(String id) {
@@ -76,9 +73,10 @@ public class TerminalConterllor {
 	}
 
 	/**
-	 * ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	 * 
+	 	ÁÐ±íÏÔÊ¾
 	 * @param model
+	 * @param request
+	 * @param response
 	 * @return
 	 * @throws IOException
 	 */
@@ -96,30 +94,21 @@ public class TerminalConterllor {
 		if (null == pageSize || "".equals(pageNow.trim())) {
 			pageSize = page.getPageSize() + "";
 		}
-		Integer pageCount = 0;
-		pageh.setPageNow((Integer.parseInt(pageNow) - 1) * Integer.parseInt(pageSize));
+		pageh.setPageNow(Integer.parseInt(pageNow) );
 		pageh.setPageSize(Integer.parseInt(pageSize));
-//		name.replaceAll("_", "\\\\_");
-
 		pageh.setObject1(SearchTool.decodeSpecialCharsWhenLikeUseSlash(name));
-		pageCount = terminalService.gettotal(pageh);
-		List<Terminal> list = terminalService.select(pageh);
+		org.springframework.data.domain.Page<Terminal> page1= terminalService.select(pageh);
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
-		page.setPageCount(pageCount);
+		page.setList(page1.getContent());
+		page.setPageCount(page1.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
 		return page;
-		/*
-		 * String parseJSON = JsonUtils.beanToJson(page);
-		 * response.getWriter().write(parseJSON);
-		 */
 	}
 
 	/**
-	 * ï¿½Ãµï¿½Òªï¿½Þ¸Äµï¿½ï¿½ï¿½ï¿½ï¿½
-	 * 
+	 * µÃµ½ÒªÐÞ¸ÄµÄÊý¾Ý
 	 * @param id
-	 * @param model
+	 * @param map
 	 * @return
 	 */
 	@RequestMapping("terminalUpdate")
@@ -130,10 +119,9 @@ public class TerminalConterllor {
 	}
 
 	/**
-	 * ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½
-	 * 
-	 * @param id
+	 * ÐÞ¸ÄÊý¾Ý
 	 * @param ter
+	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/terminalUpdateSave")
@@ -146,10 +134,10 @@ public class TerminalConterllor {
 	}
 
 	/**
-	 * ï¿½Õ¶ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	 * 
+	 * ÖÕ¶ËÁÐ±íÏÂÀ­¿ò
 	 * @param request
 	 * @param response
+	 * @return
 	 * @throws IOException
 	 */
 	@ResponseBody

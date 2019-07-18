@@ -159,16 +159,14 @@ public class ShoppingGuideConterllor {
 		if (null == pageSize || "".equals(pageNow.trim())) {
 			pageSize = page.getPageSize() + "";
 		}
-		pageh.setPageNow((Integer.parseInt(pageNow) - 1) * Integer.parseInt(pageSize));
+		pageh.setPageNow(Integer.parseInt(pageNow));
 		pageh.setPageSize(Integer.parseInt(pageSize));
-//		name=name.replaceAll("_", "\\\\_");
 		pageh.setObject1(SearchTool.decodeSpecialCharsWhenLikeUseSlash(name));
 		int pageCount = 0;
-		pageCount = shoppingGuideService.gettotal(pageh);
-		List<ShoppingGuide> list = shoppingGuideService.select(pageh);
+		org.springframework.data.domain.Page<ShoppingGuide> page1= shoppingGuideService.select(pageh);
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
-		page.setPageCount(pageCount);
+		page.setList(page1.getContent());
+		page.setPageCount(page1.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
 		return page;
 	}
