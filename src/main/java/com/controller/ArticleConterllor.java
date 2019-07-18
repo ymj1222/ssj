@@ -70,7 +70,7 @@ public class ArticleConterllor {
 	/**
 	 * �������
 	 * 
-	 * @param ter
+	 * @param
 	 * @param model
 	 * @return
 	 */
@@ -78,7 +78,7 @@ public class ArticleConterllor {
 	public String add(Article article, Model model,HttpServletRequest request) {
 		long bs = System.currentTimeMillis();
 		article.setCreateor(GetNameUtil.getName(request));
-		article.setCreateor(GetNameUtil.getName(request));
+		article.setLastUpdater(GetNameUtil.getName(request));
 		String code = Long.toString(bs);
 		article.setCode(code);
 		article.setIssue(0);
@@ -94,7 +94,7 @@ public class ArticleConterllor {
 	/**
 	 * ����idɾ������
 	 * 
-	 * @param id
+	 * @param
 	 */
 	@RequestMapping(value = "/articleDelete")
 	public String delete(String code) {
@@ -127,11 +127,10 @@ public class ArticleConterllor {
 		pages.setPageNow(Integer.parseInt(pageNow));
 		pages.setPageSize(Integer.parseInt(pageSize));
 		pages.setObject1(sname);
-		pageCount = articleService.gettotal(pages);
-		List<Article> list = articleService.select(pages);
+		org.springframework.data.domain.Page<Article> page1 = articleService.select(pages);
 		response.setCharacterEncoding("utf-8");
-		page.setList(list);
-		page.setPageCount(pageCount);
+		page.setList(page1.getContent());
+		page.setPageCount(page1.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
 		return page;
 	}
@@ -145,7 +144,7 @@ public class ArticleConterllor {
 	/**
 	 * �õ�Ҫ�޸ĵ�����
 	 * 
-	 * @param id
+	 * @param
 	 * @param model
 	 * @return
 	 */
@@ -155,18 +154,30 @@ public class ArticleConterllor {
 		model.addAttribute("code", article.getCode());
 		model.addAttribute("name", article.getName());
 		model.addAttribute("content", article.getContent());
+		model.addAttribute("id", article.getId());
+		model.addAttribute("issue", article.getIssue());
+		model.addAttribute("createor", article.getCreateor());
+		model.addAttribute("createTime", article.getCreateTime());
+		model.addAttribute("special", article.getSpecial());
+		model.addAttribute("specialCode", article.getSpecialCode());
+		model.addAttribute("specialName", article.getSpecialName());
+		model.addAttribute("releaseTime", article.getReleaseTime());
+
 		return "forward:/WEB-INF/views/article/articleUpdateSave.jsp";
 	}
 
 	/**
 	 * �޸�����
 	 * 
-	 * @param id
-	 * @param order
+	 * @param
+	 * @param
 	 * @return
 	 */
 	@RequestMapping(value="/articleUpdateSave")
-	public String updateSave(Article article) {
+	public String updateSave(Article article,HttpServletRequest request) {
+		System.out.println(article.toString());
+		article.setLastUpdater(GetNameUtil.getName(request));
+		article.setLastUpdateTime(DateUtils.getCurrentDateString());
 		articleService.update(article);
 		return "redirect:findArticleList";
 	}
@@ -178,7 +189,7 @@ public class ArticleConterllor {
 	}
 	/**
 	 * �����з���������
-	 * @param code
+	 * @param
 	 * @param response
 	 * @return 
 	 * @return
@@ -193,7 +204,7 @@ public class ArticleConterllor {
 	/**
 	 * ��������
 	 * 
-	 * @param id
+	 * @param
 	 * @return
 	 */
 	@RequestMapping(value = "/articleUpdateIs")

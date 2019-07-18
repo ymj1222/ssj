@@ -59,9 +59,21 @@ function getUrlParam(name) {
 										<input type="hidden" name="code" value="${code}"
 											class="form-control" placeholder="编号">
 									</div>
-								<div class="panel-body">
+									<div class="panel-body">
 										<input type="hidden" name="type" value="${type}"
-											class="form-control" placeholder="类型">
+											   class="form-control" placeholder="type">
+									</div>
+								<div class="panel-body">
+										<input type="hidden" name="id" value="${id}"
+											class="form-control" placeholder="id">
+									</div>
+									<div class="panel-body">
+										<input type="hidden" name="createTime" value="${createTime}"
+											   class="form-control" placeholder="createTime">
+									</div>
+									<div class="panel-body">
+										<input type="hidden" name="createor" value="${createor}"
+											   class="form-control" placeholder="createor">
 									</div>
 									<div class="panel-body">
 									<span><label>专题名称</label></span>

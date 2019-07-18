@@ -1,43 +1,38 @@
 package com.service;
 
-import java.util.List;
-
+import com.dao.ArticleReportDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.dao.ArticleReportDao;
 import com.entity.ArticleReport;
 import com.util.Pageh;
 
 @Service
 public class ArticleReportService {
 	@Autowired
-	ArticleReportDao ad;
+	private ArticleReportDao articleReportDa;
+
 	public void add(ArticleReport article) {
-		ad.add(article);
+		articleReportDa.save(article);
 	}
 	/**
 	 * 得到所有数据
 	 * 
 	 * @return
 	 */
-	public List<ArticleReport> select(Pageh page) {
-		int pageNow = (page.getPageNow()-1)*page.getPageSize();
-		page.setPageNow(pageNow);
-		List<ArticleReport> list = ad.select(page);
-		return list;
-	}
-	/**
-	 * 得到数据总页数
-	 */
-	public Integer gettotal(Pageh p) {
-		int pageCount = 0;
-		int rowCount = ad.gettotal(p.getObject1());
-		if ((rowCount % p.getPageSize()) == 0) {
-			pageCount = rowCount / p.getPageSize();
-		} else {
-			pageCount = rowCount / p.getPageSize() + 1;
+	public Page<ArticleReport>select(Pageh pageh) {
+		if(pageh.getObject1()!=null){
+			Pageable pageable =  PageRequest.of(pageh.getPageNow()-1, pageh.getPageSize());
+			Page<ArticleReport> page=articleReportDa.getByArticleNameContainingOrderByIdDesc(pageh.getObject1(),pageable);
+			return page;
+		}else {
+			Pageable pageable =  PageRequest.of(pageh.getPageNow(), pageh.getPageSize(),new Sort(Sort.Direction.DESC,"id"));
+			Page<ArticleReport> page=articleReportDa.findAll(pageable);
+			return page;
 		}
-		return pageCount;
 	}
 }

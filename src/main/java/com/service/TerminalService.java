@@ -2,7 +2,9 @@ package com.service;
 
 import java.util.List;
 
+import com.dao.AgentDao;
 import com.dao.TerminalDao;
+import com.entity.Agent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +19,8 @@ import com.util.Pageh;
 public class TerminalService {
 	@Autowired
 	private TerminalDao terminalD;
-
+	@Autowired
+	private AgentDao agentDa;
 	public void add(Terminal ter) {
 		terminalD.save(ter);
 	}
@@ -28,6 +31,15 @@ public class TerminalService {
 	 * @param id
 	 */
 	public void delete(String id) {
+		Terminal terminal = terminalD.getById(Integer.valueOf(id));
+		List<Agent> list = agentDa.getByTerminalCode(terminal.getCode());
+		for (Agent agent : list) {
+			if(agent!=null){
+				agent.setTerminalCode(null);
+				agent.setTerminal(null);
+				agentDa.save(agent);
+			}
+		}
 		terminalD.deleteById(Integer.valueOf(id));
 	}
 

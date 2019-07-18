@@ -1,45 +1,36 @@
 package com.service;
 
-import java.util.List;
-
+import com.dao.SpecialDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.dao.SpecialDao;
 import com.entity.Special;
-import com.util.Page;
 import com.util.Pageh;
 
 @Service
 public class SpecialService {
 	@Autowired
-	private SpecialDao specialDao;
-	/*@Autowired
-	private ProductTypeDao pd;*/
+	private SpecialDao specialDa;
 
-	/**
-	 * 找商品类型
-	 * 
-	 * @param id
-	 */
-	/*public List<ProductType> specialType(){
-	List<ProductType>list=pd.selectType();
-	return list;
-	}*/
+
+
 	
 	
 	public void add(Special special) {
-		specialDao.add(special);
+		specialDa.save(special);
 	}
 
 	/**
-	 * 根据id删除
+	 * 根据code删除
 	 * 
 	 * @param id
 	 */
 	public void delete(String id) {
-	
-		specialDao.delete(id);
+		specialDa.delete(specialDa.getByCode(id));
 	}
 
 	/**
@@ -47,45 +38,38 @@ public class SpecialService {
 	 * 
 	 * @return
 	 */
-	public List<Special> select(Pageh page) {
-		int pageNow = (page.getPageNow()-1)*page.getPageSize();
-		page.setPageNow(pageNow);
-		List<Special> list = specialDao.select(page);
-		return list;
+	public Page<Special> select(Pageh pageh) {
+		if(pageh.getObject1()!=null){
+			Pageable pageable =  PageRequest.of(pageh.getPageNow()-1, pageh.getPageSize());
+			org.springframework.data.domain.Page<Special> page=specialDa.getByNameContainingOrderByIdDesc(pageh.getObject1(),pageable);
+			return page;
+		}else {
+			Pageable pageable =  PageRequest.of(pageh.getPageNow()-1, pageh.getPageSize(),new Sort(Sort.Direction.DESC,"id"));
+			Page<Special> page=specialDa.findAll(pageable);
+			return page;
+		}
 	}
 
-	/**
-	 * 得到数据总页数
-	 */
-	public Integer gettotal(int pageSize,String sname) {
-		int pageCount = 0;
-		int rowCount = specialDao.gettotal(sname);
-		if ((rowCount % pageSize) == 0) {
-			pageCount = rowCount / pageSize;
-		} else {
-			pageCount = rowCount / pageSize + 1;
-		}
-		return pageCount;
-	}
+
 
 	/**
 	 * 得到要修改的数据
 	 * 
-	 * @param id
+	 * @param
 	 * @return
 	 */
 	public Special updatequery(String code) {
-		Special special = specialDao.updatequery(code);
+		Special special = specialDa.getByCode(code);
 		return special;
 	}
 
 	/**
 	 * 修改数据
 	 * 
-	 * @param id
-	 * @param meetroom
+	 * @param
+	 * @param
 	 */
 	public void update(Special special) {
-		specialDao.updateSave(special);
+		specialDa.save(special);
 	}
 }

@@ -60,7 +60,7 @@ public class ProductService {
 	public void insert(Product product) {
 		ProductBrand brand = brandservice.select(Long.valueOf(product.getBrand().getCode()));
 		ProductType type = typeservice.select(Long.valueOf(product.getProducttype().getCode()));
-		Agent agent = agentDao.find(product.getAgent().getId());
+		Agent agent = agentDao.getById(product.getAgent().getId());
 		product.setBrandCode(Long.valueOf(product.getBrand().getCode()));
 		product.setType(Long.valueOf(product.getProducttype().getCode()));
 		product.setAgentCode(Long.valueOf(agent.getCode()));
@@ -75,7 +75,7 @@ public class ProductService {
 
 	/**
 	 * 
-	 * @param page
+	 * @param
 	 * @return ÉÌÆ·¾Ž¾ƒµÄ”µ“þ
 	 */
 	public Page<Product> selectproductlist(String name, int pageNow, int pageSize) {
@@ -120,7 +120,7 @@ public class ProductService {
 	public void updateSave(Product product) {
 		ProductBrand brand = brandservice.select(Long.valueOf(product.getBrand().getName()));
 		ProductType type = typeservice.select(Long.valueOf(product.getProducttype().getName()));
-		Agent agent = agentDao.find(product.getAgent().getId());
+		Agent agent = agentDao.getById(product.getAgent().getId());
 		product.setAgent(agent);
 		product.setBrand(brand);
 		product.setProducttype(type);
