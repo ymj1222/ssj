@@ -61,6 +61,9 @@ public class ProductService {
 		ProductBrand brand = brandservice.select(Long.valueOf(product.getBrand().getCode()));
 		ProductType type = typeservice.select(Long.valueOf(product.getProducttype().getCode()));
 		Agent agent = agentDao.getById(product.getAgent().getId());
+		product.setBrandName(brand.getName());
+		product.setTypeName(type.getName());
+		product.setAgentName(agent.getName());
 		product.setBrandCode(Long.valueOf(product.getBrand().getCode()));
 		product.setType(Long.valueOf(product.getProducttype().getCode()));
 		product.setAgentCode(Long.valueOf(agent.getCode()));
@@ -84,16 +87,13 @@ public class ProductService {
 		PageRequest pageable =PageRequest.of(pageNow-1, pageSize, sort);
 		Specification<Product> specification = new Specification<Product>() {
 			@Override
-			public Predicate toPredicate(Root<Product> root,
-										 CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<Product> root,CriteriaQuery<?> query, CriteriaBuilder cb) {
 				if(name !=null && name !="") {
 					Predicate predicate = cb.like(root.get("name").as(String.class),"%"+name+"%");
 					query.where(root.get("auditStatus").as(Integer.class).in(1,2),predicate);
-
 					return null;
 				}
 				query.where(root.get("auditStatus").as(Integer.class).in(1,2));
-
 				return null;
 			}
 		};
@@ -121,10 +121,13 @@ public class ProductService {
 		ProductBrand brand = brandservice.select(Long.valueOf(product.getBrand().getName()));
 		ProductType type = typeservice.select(Long.valueOf(product.getProducttype().getName()));
 		Agent agent = agentDao.getById(product.getAgent().getId());
+		product.setBrandName(brand.getName());
+		product.setTypeName(type.getName());
+		product.setAgentName(agent.getName());
 		product.setAgent(agent);
 		product.setBrand(brand);
 		product.setProducttype(type);
-		productDao.updateSave(product.getName(),product.getPrice(),Long.valueOf(product.getProducttype().getCode()),Long.valueOf(product.getBrand().getCode()),product.getSize(),product.getSellValue(),product.getMarketValue(),product.getColor(),product.getInduction(),product.getCode());
+		productDao.updateSave(product.getName(),product.getPrice(),Long.valueOf(product.getProducttype().getCode()),Long.valueOf(product.getBrand().getCode()),product.getSize(),product.getSellValue(),product.getMarketValue(),product.getColor(),product.getInduction(),product.getCode(),product.getBrandName(),product.getTypeName(),product.getAgentName());
 		agent.getProduct().add(product);
 		type.getProduct().add(product);
 		brand.getProduct().add(product);

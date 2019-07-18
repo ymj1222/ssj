@@ -93,17 +93,13 @@ public class ProductConterllor {
 	}
 
 	private List<String> saveFile(HttpServletRequest request, MultipartFile file, List<String> list,String fileName) {
-		// �ж��ļ��Ƿ�Ϊ��
 		if (!file.isEmpty()) {
 			try {
-
 				String destFileName = request.getServletContext().getRealPath("") + "photo/"+ fileName;
 				list.add(file.getOriginalFilename());
 				File saveDir = new File(destFileName  );
 				if (!saveDir.getParentFile().exists())
 					saveDir.getParentFile().mkdirs();
-
-				// ת���ļ�
 				file.transferTo(saveDir);
 				return list;
 			} catch (Exception e) {
@@ -128,7 +124,7 @@ public class ProductConterllor {
 	 */
 	@ResponseBody
 	@RequestMapping("/productselect")
-	public Page select(Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public Page select(HttpServletRequest request, HttpServletResponse response){
 		Page page = new Page();
 		String pageNow = request.getParameter("pageNow");
 		String pageSize = request.getParameter("pageSize");
@@ -144,6 +140,7 @@ public class ProductConterllor {
 		page.setList(pages.getContent());
 		page.setPageCount(pages.getTotalPages());
 		page.setPageNow(Integer.parseInt(pageNow));
+		System.out.println(pages.getContent());
 		return page;
 	}
 
